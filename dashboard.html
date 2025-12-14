@@ -648,13 +648,13 @@
         
         // Fetch all data in parallel
         const [appointmentsRes, servicesRes, usersRes] = await Promise.all([
-          axios.get('https://lashes.ccs4thyear.com/api/appointments', {
+          axios.get('https://lashes.ccs4thyear.com/appointments', {
             headers: { Authorization: `Bearer ${token}` }
           }).catch(() => ({ data: [] })),
-          axios.get('https://lashes.ccs4thyear.com/api/lash-services', {
+          axios.get('https://lashes.ccs4thyear.com/lash-services', {
             headers: { Authorization: `Bearer ${token}` }
           }).catch(() => ({ data: [] })),
-          axios.get('https://lashes.ccs4thyear.com/api/users', {
+          axios.get('https://lashes.ccs4thyear.com/users', {
             headers: { Authorization: `Bearer ${token}` }
           }).catch(() => ({ data: [] }))
         ]);
@@ -863,7 +863,7 @@
         const token = localStorage.getItem('authToken');
         
         // Fetch appointments for this technician
-        const appointmentsRes = await axios.get('https://lashes.ccs4thyear.com/api/appointments', {
+        const appointmentsRes = await axios.get('https://lashes.ccs4thyear.com/appointments', {
           headers: { Authorization: `Bearer ${token}` }
         }).catch(() => ({ data: [] }));
 
@@ -1026,7 +1026,7 @@
         }
 
         // Validate token by making a test request
-        const validationRes = await fetch("https://lashes.ccs4thyear.com/api/lash-services", {
+        const validationRes = await fetch("https://lashes.ccs4thyear.com/lash-services", {
           headers: { 'Authorization': `Bearer ${token}` }
         });
 
@@ -1072,7 +1072,7 @@
           
         }
 
-        const res = await fetch("https://lashes.ccs4thyear.com/api/lash-services", {
+        const res = await fetch("https://lashes.ccs4thyear.com/lash-services", {
           headers: { 'Authorization': `Bearer ${token}` }
         });
 

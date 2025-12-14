@@ -462,7 +462,7 @@
         try {
           // Create new appointment
           const res = await axios.post(
-            "https://lashes.ccs4thyear.com/api/appointments",
+            "https://lashes.ccs4thyear.com/appointments",
             {
               technician_id: technicianId,
               service_name: serviceName,
@@ -529,7 +529,7 @@
         // Load services
         let servicesRes;
         try {
-          servicesRes = await axios.get("https://lashes.ccs4thyear.com/api/lash-services", {
+          servicesRes = await axios.get("https://lashes.ccs4thyear.com/lash-service", {
             headers: { Authorization: `Bearer ${token}` },
           });
           console.log("Services loaded:", servicesRes.data);

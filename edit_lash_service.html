@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Add Nail Service - Nail Care Booking</title>
+  <title>Edit Lash Service - Lash Care Booking</title>
   <style>
     * {
       margin: 0;
@@ -12,16 +12,22 @@
     }
 
     :root {
-      --primary-bg: #ffffff;
-      --secondary-bg: #f5f5f5;
-      --accent-primary: #000000;
-      --accent-secondary: #333333;
-      --text-primary: #000000;
-      --text-secondary: #666666;
-      --border-color: #e0e0e0;
+      --primary-bg: #faf5ff;
+      --secondary-bg: #f3e8ff;
+      --accent-primary: #9333ea;
+      --accent-secondary: #a855f7;
+      --accent-gradient: linear-gradient(135deg, #9333ea 0%, #ec4899 100%);
+      --text-primary: #1f2937;
+      --text-secondary: #6b7280;
+      --border-color: #e9d5ff;
       --card-bg: #ffffff;
-      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-      --shadow-hover: 0 20px 25px -5px rgba(0, 0, 0, 0.15), 0 10px 10px -5px rgba(0, 0, 0, 0.1);
+      --success-color: #10b981;
+      --danger-color: #ef4444;
+      --warning-color: #f59e0b;
+      --info-color: #3b82f6;
+      --shadow: 0 4px 6px -1px rgba(147, 51, 234, 0.1), 0 2px 4px -1px rgba(147, 51, 234, 0.06);
+      --shadow-hover: 0 20px 25px -5px rgba(147, 51, 234, 0.2), 0 10px 10px -5px rgba(147, 51, 234, 0.15);
+      --shadow-lg: 0 10px 15px -3px rgba(147, 51, 234, 0.15), 0 4px 6px -2px rgba(147, 51, 234, 0.1);
     }
 
     body {
@@ -42,7 +48,7 @@
       width: 100%;
       height: 100%;
       background: 
-        repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(0, 0, 0, 0.02) 10px, rgba(0, 0, 0, 0.02) 20px);
+        repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(147, 51, 234, 0.03) 10px, rgba(147, 51, 234, 0.03) 20px);
       z-index: -1;
     }
 
@@ -70,7 +76,10 @@
     .logo {
       font-size: 1.5rem;
       font-weight: 700;
-      color: var(--text-primary);
+      background: var(--accent-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
       text-decoration: none;
       letter-spacing: -0.5px;
     }
@@ -133,7 +142,8 @@
     .form-group input:focus {
       outline: none;
       border-color: var(--accent-primary);
-      box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 0 0 3px rgba(147, 51, 234, 0.1);
+      background: #ffffff;
     }
 
     .form-group input[type="file"] {
@@ -146,6 +156,18 @@
       margin-top: 0.5rem;
       color: var(--text-secondary);
       font-size: 0.85rem;
+    }
+
+    .current-image {
+      margin-top: 0.5rem;
+    }
+
+    .current-image img {
+      width: 150px;
+      height: 150px;
+      object-fit: cover;
+      border-radius: 8px;
+      border: 1px solid var(--border-color);
     }
 
     .form-actions {
@@ -180,8 +202,9 @@
     }
 
     .submit-btn {
-      background: var(--accent-primary);
+      background: var(--accent-gradient);
       color: white;
+      border: none;
     }
 
     .submit-btn:hover {
@@ -217,37 +240,41 @@
 <body>
   <nav>
     <div class="nav-container">
-      <a href="nail-services.html" class="logo">Nail Care Booking</a>
-      <a href="nail-services.html" style="color: var(--text-secondary); text-decoration: none;">← Back to Services</a>
+      <a href="lash-services.html" class="logo">Lash Care Booking</a>
+      <a href="lash-services.html" style="color: var(--text-secondary); text-decoration: none;">← Back to Services</a>
     </div>
   </nav>
 
   <main>
     <div class="form-container">
       <div class="form-card">
-        <h1 class="form-title">Add New Nail Service</h1>
-        <p class="form-subtitle">Add a new nail care cleaning service</p>
+        <h1 class="form-title">Edit Lash Service</h1>
+        <p class="form-subtitle">Update lash care service details</p>
         
-        <form id="addServiceForm" enctype="multipart/form-data">
+        <form id="editServiceForm" enctype="multipart/form-data">
           <div class="form-group">
             <label for="service_name">Service Name *</label>
-            <input type="text" id="service_name" name="service_name" required placeholder="Enter service name">
+            <input type="text" id="service_name" name="service_name" required>
           </div>
           
           <div class="form-group">
             <label for="price">Price *</label>
-            <input type="number" step="0.01" id="price" name="price" required placeholder="Enter price (e.g., 500.00)">
+            <input type="number" step="0.01" id="price" name="price" required>
           </div>
           
           <div class="form-group">
-            <label for="image">Service Image</label>
-            <input type="file" id="image" name="image" accept="image/*">
+            <label for="image">Service Image *</label>
+            <input type="file" id="image" name="image" accept="image/*" required>
             <small class="file-hint">Supported formats: JPG, PNG, GIF, WebP. Max size: 5MB</small>
+            <div class="current-image" id="currentImageContainer" style="display: none;">
+              <p style="margin-top: 0.5rem; color: var(--text-secondary); font-size: 0.9rem;">Current image:</p>
+              <img id="currentImage" src="" alt="Current service image">
+            </div>
           </div>
           
           <div class="form-actions">
-            <button type="button" class="btn cancel-btn" onclick="window.location.href='nail-services.html'">Cancel</button>
-            <button type="submit" class="btn submit-btn">Add Service</button>
+            <button type="button" class="btn cancel-btn" onclick="window.location.href='lash-services.html'">Cancel</button>
+            <button type="submit" class="btn submit-btn">Update Service</button>
           </div>
         </form>
       </div>
@@ -255,14 +282,16 @@
   </main>
 
   <footer>
-    <p>&copy; 2025 Nail Care Booking. All rights reserved.</p>
+    <p>&copy; 2025 Lash Care Booking. All rights reserved.</p>
   </footer>
 
   <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
   <script src="js/auth.js"></script>
   <script>
-    $(document).ready(function() {
+    let serviceId = null;
+
+    $(document).ready(async function() {
       requireAuth();
       
       const role = localStorage.getItem('userRole');
@@ -272,17 +301,30 @@
         return;
       }
 
-      const $addServiceForm = $("#addServiceForm");
+      // Get service ID from URL
+      const urlParams = new URLSearchParams(window.location.search);
+      serviceId = urlParams.get('id');
+
+      if (!serviceId) {
+        alert('Service ID not provided');
+        window.location.href = 'lash-services.html';
+        return;
+      }
+
+      // Load service data
+      await loadService();
+
+      const $editServiceForm = $("#editServiceForm");
       const $imageInput = $("#image");
 
-      if ($addServiceForm.length) {
-        $addServiceForm.on("submit", async function(e) {
+      if ($editServiceForm.length) {
+        $editServiceForm.on("submit", async function(e) {
           e.preventDefault();
-          const $submitButton = $addServiceForm.find('.submit-btn');
+          const $submitButton = $editServiceForm.find('.submit-btn');
           const originalText = $submitButton.text();
 
           $submitButton.prop('disabled', true);
-          $submitButton.text("Adding Service...");
+          $submitButton.text("Updating Service...");
 
           const formData = new FormData();
           formData.append('service_name', $('#service_name').val());
@@ -290,23 +332,28 @@
 
           if ($imageInput[0].files.length > 0) {
             formData.append('image', $imageInput[0].files[0]);
+          } else {
+            alert('Please select an image to update.');
+            $submitButton.prop('disabled', false);
+            $submitButton.text(originalText);
+            return;
           }
 
           const token = localStorage.getItem('authToken');
 
           try {
-            const res = await axios.post("https://nailcare.ccs4thyear.com/api/nail-services", formData, {
+            const res = await axios.post(`https://lashes.ccs4thyear.com/api/lash-services/${serviceId}/update`, formData, {
               headers: {
                 'Authorization': `Bearer ${token}`,
                 'Content-Type': 'multipart/form-data'
               }
             });
 
-            alert("Service added successfully!");
-            window.location.href = "nail-services.html";
+            alert("Service updated successfully!");
+            window.location.href = "lash-services.html";
           } catch (err) {
-            console.error("Add service error:", err);
-            const errorMsg = err.response?.data?.message || err.response?.data?.error || 'Failed to add service.';
+            console.error("Update service error:", err);
+            const errorMsg = err.response?.data?.message || err.response?.data?.error || 'Failed to update service.';
             alert(errorMsg);
           } finally {
             $submitButton.prop('disabled', false);
@@ -314,20 +361,31 @@
           }
         });
       }
-
-      if ($imageInput.length) {
-        $imageInput.on('change', function(e) {
-          const file = e.target.files[0];
-          if (file) {
-            if (file.size > 5 * 1024 * 1024) {
-              alert('File size too large. Max 5MB.');
-              $(this).val('');
-              return;
-            }
-          }
-        });
-      }
     });
+
+    async function loadService() {
+      try {
+        const token = localStorage.getItem('authToken');
+        const res = await axios.get(`https://lashes.ccs4thyear.com/api/lash-services/${serviceId}`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
+
+        const service = res.data;
+        $('#service_name').val(service.service_name || '');
+        $('#price').val(service.price || '');
+
+        // Show current image
+        if (service.image_path) {
+          const imageUrl = `https://lashes.ccs4thyear.com/${service.image_path}`;
+          $('#currentImage').attr('src', imageUrl);
+          $('#currentImageContainer').show();
+        }
+      } catch (err) {
+        console.error("Load service error:", err);
+        alert('Failed to load service data.');
+        window.location.href = 'lash-services.html';
+      }
+    }
   </script>
 </body>
 </html>

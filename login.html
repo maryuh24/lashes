@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Login - Nails Booking</title>
+  <title>Login - Lashes Booking</title>
 <style>
     * {
       margin: 0;
@@ -12,16 +12,22 @@
     }
 
     :root {
-      --primary-bg: #ffffff;
-      --secondary-bg: #f5f5f5;
-      --accent-primary: #000000;
-      --accent-secondary: #333333;
-      --text-primary: #000000;
-      --text-secondary: #666666;
-      --border-color: #e0e0e0;
+      --primary-bg: #faf5ff;
+      --secondary-bg: #f3e8ff;
+      --accent-primary: #9333ea;
+      --accent-secondary: #a855f7;
+      --accent-gradient: linear-gradient(135deg, #9333ea 0%, #ec4899 100%);
+      --text-primary: #1f2937;
+      --text-secondary: #6b7280;
+      --border-color: #e9d5ff;
       --card-bg: #ffffff;
-      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-      --shadow-hover: 0 20px 25px -5px rgba(0, 0, 0, 0.15), 0 10px 10px -5px rgba(0, 0, 0, 0.1);
+      --success-color: #10b981;
+      --danger-color: #ef4444;
+      --warning-color: #f59e0b;
+      --info-color: #3b82f6;
+      --shadow: 0 4px 6px -1px rgba(147, 51, 234, 0.1), 0 2px 4px -1px rgba(147, 51, 234, 0.06);
+      --shadow-hover: 0 20px 25px -5px rgba(147, 51, 234, 0.2), 0 10px 10px -5px rgba(147, 51, 234, 0.15);
+      --shadow-lg: 0 10px 15px -3px rgba(147, 51, 234, 0.15), 0 4px 6px -2px rgba(147, 51, 234, 0.1);
     }
 
     body {
@@ -43,7 +49,7 @@
       width: 100%;
       height: 100%;
       background: 
-        repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(0, 0, 0, 0.02) 10px, rgba(0, 0, 0, 0.02) 20px);
+        repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(147, 51, 234, 0.03) 10px, rgba(147, 51, 234, 0.03) 20px);
       z-index: -1;
     }
 
@@ -72,7 +78,10 @@
     .logo {
       font-size: 1.5rem;
       font-weight: 700;
-      color: var(--text-primary);
+      background: var(--accent-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
       text-decoration: none;
       letter-spacing: -0.5px;
     }
@@ -108,7 +117,7 @@
       height: 2px;
       bottom: -6px;
       left: 0;
-      background: var(--accent-primary);
+      background: var(--accent-gradient);
       border-radius: 2px;
     }
 
@@ -215,14 +224,15 @@
     input:focus {
       outline: none;
       border-color: var(--accent-primary);
-      box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 0 0 3px rgba(147, 51, 234, 0.1);
+      background: #ffffff;
     }
 
     button {
       padding: 1rem;
-      background: var(--accent-primary);
+      background: var(--accent-gradient);
       border: none;
-      border-radius: 8px;
+      border-radius: 12px;
       color: white;
       font-weight: 600;
       font-size: 1rem;
@@ -230,6 +240,24 @@
       transition: all 0.3s ease;
       margin-top: 0.5rem;
       box-shadow: var(--shadow);
+      position: relative;
+      overflow: hidden;
+    }
+
+    button::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, #a855f7 0%, #f472b6 100%);
+      transition: left 0.3s ease;
+      z-index: -1;
+    }
+
+    button:hover::before {
+      left: 0;
     }
 
     button:hover {
@@ -247,14 +275,16 @@
     }
 
     .forgot-password a {
-      color: var(--text-primary);
-      text-decoration: underline;
+      color: var(--accent-primary);
+      text-decoration: none;
       font-size: 0.9rem;
       transition: all 0.2s ease;
+      font-weight: 500;
     }
 
     .forgot-password a:hover {
       text-decoration: underline;
+      color: var(--accent-secondary);
     }
 
     .login-link {
@@ -265,14 +295,15 @@
     }
 
     .login-link a {
-      color: var(--text-primary);
-      text-decoration: underline;
+      color: var(--accent-primary);
+      text-decoration: none;
       font-weight: 500;
       transition: all 0.2s ease;
     }
 
     .login-link a:hover {
       text-decoration: underline;
+      color: var(--accent-secondary);
     }
 
     /* Footer */
@@ -436,7 +467,7 @@
 
 
   <footer>
-    <p>&copy; 2025 Nails Booking. All rights reserved.</p>
+    <p>&copy; 2025 Lashes Booking. All rights reserved.</p>
   </footer>
 
   <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>

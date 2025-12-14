@@ -12,16 +12,22 @@
     }
 
     :root {
-      --primary-bg: #ffffff;
-      --secondary-bg: #f5f5f5;
-      --accent-primary: #000000;
-      --accent-secondary: #333333;
-      --text-primary: #000000;
-      --text-secondary: #666666;
-      --border-color: #e0e0e0;
+      --primary-bg: #faf5ff;
+      --secondary-bg: #f3e8ff;
+      --accent-primary: #9333ea;
+      --accent-secondary: #a855f7;
+      --accent-gradient: linear-gradient(135deg, #9333ea 0%, #ec4899 100%);
+      --text-primary: #1f2937;
+      --text-secondary: #6b7280;
+      --border-color: #e9d5ff;
       --card-bg: #ffffff;
-      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-      --shadow-hover: 0 20px 25px -5px rgba(0, 0, 0, 0.15), 0 10px 10px -5px rgba(0, 0, 0, 0.1);
+      --success-color: #10b981;
+      --danger-color: #ef4444;
+      --warning-color: #f59e0b;
+      --info-color: #3b82f6;
+      --shadow: 0 4px 6px -1px rgba(147, 51, 234, 0.1), 0 2px 4px -1px rgba(147, 51, 234, 0.06);
+      --shadow-hover: 0 20px 25px -5px rgba(147, 51, 234, 0.2), 0 10px 10px -5px rgba(147, 51, 234, 0.15);
+      --shadow-lg: 0 10px 15px -3px rgba(147, 51, 234, 0.15), 0 4px 6px -2px rgba(147, 51, 234, 0.1);
     }
 
     body {
@@ -42,7 +48,7 @@
       width: 100%;
       height: 100%;
       background: 
-        repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(0, 0, 0, 0.02) 10px, rgba(0, 0, 0, 0.02) 20px);
+        repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(147, 51, 234, 0.03) 10px, rgba(147, 51, 234, 0.03) 20px);
       z-index: -1;
     }
 
@@ -70,7 +76,10 @@
     .logo {
       font-size: 1.5rem;
       font-weight: 700;
-      color: var(--text-primary);
+      background: var(--accent-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
       text-decoration: none;
       letter-spacing: -0.5px;
     }
@@ -106,7 +115,7 @@
       height: 2px;
       bottom: -6px;
       left: 0;
-      background: var(--accent-primary);
+      background: var(--accent-gradient);
       border-radius: 2px;
     }
 
@@ -179,7 +188,7 @@
     }
 
     .add-btn {
-      background: var(--accent-primary);
+      background: var(--accent-gradient);
       border: none;
       border-radius: 12px;
       color: white;
@@ -259,7 +268,7 @@
     }
 
     .edit-btn:hover {
-      background: var(--accent-primary);
+      background: var(--accent-gradient);
       color: white;
       transform: translateY(-2px);
       box-shadow: var(--shadow-hover);
@@ -399,8 +408,9 @@
     }
 
     .btn-primary {
-      background: var(--accent-primary);
+      background: var(--accent-gradient);
       color: white;
+      border: none;
     }
 
     .btn-secondary {
@@ -594,7 +604,7 @@
       const navItems = [
         { href: 'dashboard.html', text: 'Dashboard' },
         { href: 'appointments.html', text: 'Appointments' },
-        { href: 'nail-services.html', text: 'Nail Services' },
+        { href: 'lash-services.html', text: 'Nail Services' },
         { href: 'manage-users.html', text: 'Manage Users', active: true },
         { href: 'profile.html', text: 'Profile' },
         { href: '#', text: 'Logout', id: 'logoutBtn' }
@@ -616,7 +626,7 @@
     async function loadUsers() {
       try {
         const token = localStorage.getItem('authToken');
-        const res = await axios.get('https://nailcare.ccs4thyear.com/api/users', {
+        const res = await axios.get('https://lashes.ccs4thyear.com/api/users', {
           headers: { Authorization: `Bearer ${token}` }
         });
 
@@ -666,7 +676,7 @@
     async function openEditModal(userId) {
       try {
         const token = localStorage.getItem('authToken');
-        const res = await axios.get(`https://nailcare.ccs4thyear.com/api/users/${userId}`, {
+        const res = await axios.get(`https://lashes.ccs4thyear.com/api/users/${userId}`, {
           headers: { Authorization: `Bearer ${token}` }
         });
 
@@ -723,11 +733,11 @@
           let res;
           
           if (editingUserId) {
-            res = await axios.put(`https://nailcare.ccs4thyear.com/api/users/${editingUserId}`, data, {
+            res = await axios.put(`https://lashes.ccs4thyear.com/api/users/${editingUserId}`, data, {
               headers: { Authorization: `Bearer ${token}` }
             });
           } else {
-            res = await axios.post('https://nailcare.ccs4thyear.com/api/users', data, {
+            res = await axios.post('https://lashes.ccs4thyear.com/api/users', data, {
               headers: { Authorization: `Bearer ${token}` }
             });
           }
@@ -748,7 +758,7 @@
 
       try {
         const token = localStorage.getItem('authToken');
-        await axios.delete(`https://nailcare.ccs4thyear.com/api/users/${userId}`, {
+        await axios.delete(`https://lashes.ccs4thyear.com/api/users/${userId}`, {
           headers: { Authorization: `Bearer ${token}` }
         });
         alert('User deleted successfully!');

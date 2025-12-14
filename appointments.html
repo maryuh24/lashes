@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Appointments - Nails Booking</title>
+  <title>Appointments - Lashes Booking</title>
 
   <style>
     * {
@@ -13,18 +13,22 @@
     }
 
     :root {
-      --primary-bg: #ffffff;
-      --secondary-bg: #f5f5f5;
-      --accent-primary: #000000;
-      --accent-secondary: #333333;
-      --text-primary: #000000;
-      --text-secondary: #666666;
-      --border-color: #e0e0e0;
+      --primary-bg: #faf5ff;
+      --secondary-bg: #f3e8ff;
+      --accent-primary: #9333ea;
+      --accent-secondary: #a855f7;
+      --accent-gradient: linear-gradient(135deg, #9333ea 0%, #ec4899 100%);
+      --text-primary: #1f2937;
+      --text-secondary: #6b7280;
+      --border-color: #e9d5ff;
       --card-bg: #ffffff;
-      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
-        0 2px 4px -1px rgba(0, 0, 0, 0.06);
-      --shadow-hover: 0 20px 25px -5px rgba(0, 0, 0, 0.15),
-        0 10px 10px -5px rgba(0, 0, 0, 0.1);
+      --success-color: #10b981;
+      --danger-color: #ef4444;
+      --warning-color: #f59e0b;
+      --info-color: #3b82f6;
+      --shadow: 0 4px 6px -1px rgba(147, 51, 234, 0.1), 0 2px 4px -1px rgba(147, 51, 234, 0.06);
+      --shadow-hover: 0 20px 25px -5px rgba(147, 51, 234, 0.2), 0 10px 10px -5px rgba(147, 51, 234, 0.15);
+      --shadow-lg: 0 10px 15px -3px rgba(147, 51, 234, 0.15), 0 4px 6px -2px rgba(147, 51, 234, 0.1);
     }
 
     body {
@@ -45,7 +49,7 @@
       width: 100%;
       height: 100%;
       background:
-        repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(0, 0, 0, 0.02) 10px, rgba(0, 0, 0, 0.02) 20px);
+        repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(147, 51, 234, 0.03) 10px, rgba(147, 51, 234, 0.03) 20px);
       z-index: -1;
     }
 
@@ -74,7 +78,10 @@
     .logo {
       font-size: 1.5rem;
       font-weight: 700;
-      color: var(--text-primary);
+      background: var(--accent-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
       text-decoration: none;
       letter-spacing: -0.5px;
     }
@@ -110,7 +117,7 @@
       height: 2px;
       bottom: -6px;
       left: 0;
-      background: var(--accent-primary);
+      background: var(--accent-gradient);
       border-radius: 2px;
     }
 
@@ -240,7 +247,7 @@
       border: 1px solid rgba(34, 197, 94, 0.4);
     }
 
-    .status-rescheduled {
+    .status-canceled {
       background: rgba(59, 130, 246, 0.1);
       color: #1d4ed8;
       border: 1px solid rgba(59, 130, 246, 0.4);
@@ -271,8 +278,9 @@
     }
 
     .action-btn.primary {
-      background: var(--accent-primary);
+      background: var(--accent-gradient);
       color: #fff;
+      border: none;
     }
 
     .action-btn.danger {
@@ -379,7 +387,7 @@
 <body>
   <nav>
     <div class="nav-container">
-      <a href="dashboard.html" class="logo">Nail Care Booking</a>
+      <a href="dashboard.html" class="logo">Lash Care Booking</a>
       <ul class="nav-menu" id="nav-menu">
         <!-- Navigation will be populated by JavaScript based on role -->
       </ul>
@@ -410,7 +418,7 @@
   </main>
 
   <footer>
-    <p>&copy; 2025 Nail Care Booking. All rights reserved.</p>
+    <p>&copy; 2025 Lash Care Booking. All rights reserved.</p>
   </footer>
 
   <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
@@ -441,7 +449,7 @@
         navItems = [
           { href: 'dashboard.html', text: 'Dashboard' },
           { href: 'appointments.html', text: 'Appointments', active: true },
-          { href: 'nail-services.html', text: 'Nail Services' },
+          { href: 'lash-services.html', text: 'Lash Services' },
           { href: 'manage-users.html', text: 'Manage Users' },
           { href: 'profile.html', text: 'Profile' },
           { href: '#', text: 'Logout', id: 'logoutBtn' }
@@ -556,13 +564,13 @@
       const $theadEl = $('#appointmentsTableHead');
 
       if (role === 'admin') {
-        $titleEl.text('All Nail Care Appointments');
+        $titleEl.text('All Lash Care Appointments');
         $subtitleEl.text('Manage all appointments');
         $theadEl.html(`
           <tr>
             <th>ID</th>
             <th>Client Name</th>
-            <th>Nail Service</th>
+            <th>Lash Service</th>
             <th>Date</th>
             <th>Time</th>
             <th>Status</th>
@@ -576,7 +584,7 @@
           <tr>
             <th>ID</th>
             <th>Client Name</th>
-            <th>Nail Care Service</th>
+            <th>Lash Care Service</th>
             <th>Date</th>
             <th>Time</th>
             <th>Status</th>
@@ -600,7 +608,7 @@
       }
 
       try {
-        const res = await axios.get("https://nailcare.ccs4thyear.com/api/appointments", {
+        const res = await axios.get("https://lashes.ccs4thyear.com/api/appointments", {
           headers: { Authorization: `Bearer ${token}` },
         });
 
@@ -618,6 +626,17 @@
           if (role === "admin") {
             let actionsHtml = "";
             if (a.status === "pending") {
+              actionsHtml = `
+                <button type="button" class="action-btn primary" onclick="approveAppointment(${a.id})">Approve</button>
+                <button type="button" class="action-btn danger" onclick="declineAppointment(${a.id})">Decline</button>
+                <button type="button" class="action-btn danger" onclick="cancelAppointment(${a.id})">Cancel</button>
+              `;
+            } else if (a.status === "approved") {
+              actionsHtml = `
+                <button type="button" class="action-btn danger" onclick="cancelAppointment(${a.id})">Cancel</button>
+                <button type="button" class="action-btn primary" onclick="markAsCompleted(${a.id})">Mark Completed</button>
+              `;
+            } else if (a.status === "canceled") {
               actionsHtml = `
                 <button type="button" class="action-btn primary" onclick="approveAppointment(${a.id})">Approve</button>
                 <button type="button" class="action-btn danger" onclick="declineAppointment(${a.id})">Decline</button>
@@ -652,23 +671,19 @@
           } else {
             // Client view
             const serviceImage = a.service_image || 'uploads/default.png';
-            // Allow rescheduling only for pending and declined appointments, NOT for approved
-            const rescheduleBtn = (a.status === 'pending' || a.status === 'declined')
-              ? `<button type="button" class="action-btn primary" onclick="rescheduleAppointment(${a.id})">Reschedule</button>`
-              : '';
-            // Allow cancelling only when status is pending
-            const cancelBtn = (a.status === 'pending')
+            // Allow cancelling only when status is pending or approved
+            const cancelBtn = (a.status === 'pending' || a.status === 'approved')
               ? `<button type="button" class="action-btn danger" onclick="cancelAppointment(${a.id})">Cancel</button>`
               : '';
             
             rowHtml = `
-              <td><img src="https://nailcare.ccs4thyear.com/${serviceImage}" alt="${a.service_name}" style="width: 60px; height: 60px; object-fit: cover; border-radius: 4px;"></td>
+              <td><img src="https://lashes.ccs4thyear.com/${serviceImage}" alt="${a.service_name}" style="width: 60px; height: 60px; object-fit: cover; border-radius: 4px;"></td>
               <td>${a.service_name || "-"}</td>
               <td>${a.technician ? a.technician.name : "-"}</td>
               <td>${formatDate(a.date)}</td>
               <td>${formatTime(a.time)}</td>
               <td>${formatStatus(a.status)}</td>
-              <td>${rescheduleBtn} ${cancelBtn}</td>
+              <td>${cancelBtn}</td>
             `;
           }
 
@@ -696,10 +711,6 @@
       await updateAppointmentStatus(id, 'completed');
     }
 
-    async function rescheduleAppointment(id) {
-      // Redirect to booking page with appointment ID for rescheduling
-      window.location.href = `book_appointment.html?reschedule=${id}`;
-    }
 
     async function updateAppointmentStatus(id, status = null) {
       const token = localStorage.getItem("authToken");
@@ -707,7 +718,7 @@
 
       try {
         await axios.put(
-          `https://nailcare.ccs4thyear.com/api/appointments/${id}`,
+          `https://lashes.ccs4thyear.com/api/appointments/${id}`,
           { status: newStatus },
           { headers: { Authorization: `Bearer ${token}` } }
         );

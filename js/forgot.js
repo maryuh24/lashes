@@ -1,4 +1,4 @@
-const API_URL = 'https://nailcare.ccs4thyear.com';
+const API_URL = 'https://lashes.ccs4thyear.com';
 
 // DOM elements
 const $stepEmail = $('#step-email');

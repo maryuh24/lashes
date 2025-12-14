@@ -12,18 +12,23 @@
     }
 
     :root {
-      --primary-bg: #ffffff;
-      --secondary-bg: #f8fafc;
-      --accent-primary: #667eea;
-      --accent-secondary: #764ba2;
-      --text-primary: #1e293b;
-      --text-secondary: #64748b;
-      --border-color: #e2e8f0;
+      --primary-bg: #faf5ff;
+      --secondary-bg: #f3e8ff;
+      --accent-primary: #9333ea;
+      --accent-secondary: #a855f7;
+      --accent-gradient: linear-gradient(135deg, #9333ea 0%, #ec4899 100%);
+      --text-primary: #1f2937;
+      --text-secondary: #6b7280;
+      --border-color: #e9d5ff;
       --card-bg: #ffffff;
-      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-      --shadow-hover: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-      --error-color: #dc2626;
-      --success-color: #16a34a;
+      --success-color: #10b981;
+      --danger-color: #ef4444;
+      --warning-color: #f59e0b;
+      --info-color: #3b82f6;
+      --error-color: #ef4444;
+      --shadow: 0 4px 6px -1px rgba(147, 51, 234, 0.1), 0 2px 4px -1px rgba(147, 51, 234, 0.06);
+      --shadow-hover: 0 20px 25px -5px rgba(147, 51, 234, 0.2), 0 10px 10px -5px rgba(147, 51, 234, 0.15);
+      --shadow-lg: 0 10px 15px -3px rgba(147, 51, 234, 0.15), 0 4px 6px -2px rgba(147, 51, 234, 0.1);
     }
 
     body {
@@ -300,7 +305,7 @@
     }
 
     .step.active {
-      background: var(--accent-primary);
+      background: var(--accent-gradient);
       box-shadow: 0 0 10px rgba(102, 126, 234, 0.3);
     }
 

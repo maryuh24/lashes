@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Book Nail Appointment - Nails Booking</title>
+  <title>Book Lash Appointment - Lashes Booking</title>
   <style>
     * {
       margin: 0;
@@ -12,18 +12,22 @@
     }
 
     :root {
-      --primary-bg: #ffffff;
-      --secondary-bg: #f5f5f5;
-      --accent-primary: #000000;
-      --accent-secondary: #333333;
-      --text-primary: #000000;
-      --text-secondary: #666666;
-      --border-color: #e0e0e0;
+      --primary-bg: #faf5ff;
+      --secondary-bg: #f3e8ff;
+      --accent-primary: #9333ea;
+      --accent-secondary: #a855f7;
+      --accent-gradient: linear-gradient(135deg, #9333ea 0%, #ec4899 100%);
+      --text-primary: #1f2937;
+      --text-secondary: #6b7280;
+      --border-color: #e9d5ff;
       --card-bg: #ffffff;
-      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
-        0 2px 4px -1px rgba(0, 0, 0, 0.06);
-      --shadow-hover: 0 20px 25px -5px rgba(0, 0, 0, 0.15),
-        0 10px 10px -5px rgba(0, 0, 0, 0.1);
+      --success-color: #10b981;
+      --danger-color: #ef4444;
+      --warning-color: #f59e0b;
+      --info-color: #3b82f6;
+      --shadow: 0 4px 6px -1px rgba(147, 51, 234, 0.1), 0 2px 4px -1px rgba(147, 51, 234, 0.06);
+      --shadow-hover: 0 20px 25px -5px rgba(147, 51, 234, 0.2), 0 10px 10px -5px rgba(147, 51, 234, 0.15);
+      --shadow-lg: 0 10px 15px -3px rgba(147, 51, 234, 0.15), 0 4px 6px -2px rgba(147, 51, 234, 0.1);
     }
 
     body {
@@ -44,7 +48,7 @@
       width: 100%;
       height: 100%;
       background:
-        repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(0, 0, 0, 0.02) 10px, rgba(0, 0, 0, 0.02) 20px);
+        repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(147, 51, 234, 0.03) 10px, rgba(147, 51, 234, 0.03) 20px);
       z-index: -1;
     }
 
@@ -72,7 +76,10 @@
     .logo {
       font-size: 1.5rem;
       font-weight: 700;
-      color: var(--text-primary);
+      background: var(--accent-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
       text-decoration: none;
       letter-spacing: -0.5px;
     }
@@ -108,7 +115,7 @@
       height: 2px;
       bottom: -6px;
       left: 0;
-      background: var(--accent-primary);
+      background: var(--accent-gradient);
       border-radius: 2px;
     }
 
@@ -198,7 +205,8 @@
     select:focus,
     input[type="datetime-local"]:focus {
       border-color: var(--accent-primary);
-      box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.15), var(--shadow);
+      box-shadow: 0 0 0 3px rgba(147, 51, 234, 0.15), var(--shadow);
+      background: #ffffff;
     }
 
     .button-row {
@@ -230,13 +238,15 @@
     }
 
     .btn-primary {
-      background: var(--accent-primary);
+      background: var(--accent-gradient);
       color: #fff;
+      border: none;
     }
 
     .btn-primary:hover {
-      transform: translateY(-1px);
+      transform: translateY(-2px);
       box-shadow: var(--shadow-hover);
+      opacity: 0.9;
     }
 
     footer {
@@ -299,7 +309,7 @@
 <body>
   <nav>
     <div class="nav-container">
-      <a href="dashboard.html" class="logo">Nail Care Booking</a>
+      <a href="dashboard.html" class="logo">Lash Care Booking</a>
       <ul class="nav-menu" id="nav-menu">
         <li><a href="dashboard.html" class="nav-link">Dashboard</a></li>
         <li><a href="book_appointment.html" class="nav-link active">Book Appointment</a></li>
@@ -317,14 +327,14 @@
 
   <main>
     <div class="card">
-      <h1 class="card-title">Book Nail Care Appointment</h1>
-      <p class="card-subtitle">Select nail care service, technician, date, and time.</p>
+      <h1 class="card-title">Book Lash Care Appointment</h1>
+      <p class="card-subtitle">Select lash care service, technician, date, and time.</p>
 
       <form id="appointmentForm">
         <div class="form-group">
-          <label for="serviceSelect">Nail Care Service</label>
+          <label for="serviceSelect">Lash Care Service</label>
           <select id="serviceSelect" required>
-            <option value="">Select nail care service</option>
+            <option value="">Select lash care service</option>
           </select>
         </div>
 
@@ -364,7 +374,7 @@
   </main>
 
   <footer>
-    <p>&copy; 2025 Nail Care Booking. All rights reserved.</p>
+    <p>&copy; 2025 Lash Care Booking. All rights reserved.</p>
   </footer>
 
   <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
@@ -421,16 +431,7 @@
         }
       });
 
-      // Check if this is a reschedule request
-      const urlParams = new URLSearchParams(window.location.search);
-      const rescheduleId = urlParams.get('reschedule');
-      
       loadServicesAndTechnicians();
-      
-      if (rescheduleId) {
-        // Load appointment data for rescheduling (after services/technicians load)
-        loadAppointmentForReschedule(rescheduleId);
-      }
 
       const $form = $("#appointmentForm");
       $form.on("submit", async function(e) {
@@ -443,7 +444,7 @@
         const timeSlot = $("#timeSlotSelect").val();
 
         if (!technicianId || !serviceName || !date || !timeSlot) {
-          alert("Please select a nail care service, technician, appointment date, and appointment time.");
+          alert("Please select a lash care service, technician, appointment date, and appointment time.");
           return;
         }
 
@@ -459,8 +460,9 @@
         }
 
         try {
+          // Create new appointment
           const res = await axios.post(
-            "https://nailcare.ccs4thyear.com/api/appointments",
+            "https://lashes.ccs4thyear.com/api/appointments",
             {
               technician_id: technicianId,
               service_name: serviceName,
@@ -475,7 +477,7 @@
           );
 
           if (res.status === 201) {
-            alert("Appointment booked!");
+            alert("Appointment booked successfully!");
             window.location.href = "appointments.html";
           }
         } catch (err) {
@@ -527,7 +529,7 @@
         // Load services
         let servicesRes;
         try {
-          servicesRes = await axios.get("https://nailcare.ccs4thyear.com/api/nail-services", {
+          servicesRes = await axios.get("https://lashes.ccs4thyear.com/api/lash-services", {
             headers: { Authorization: `Bearer ${token}` },
           });
           console.log("Services loaded:", servicesRes.data);
@@ -546,7 +548,7 @@
         // Load technicians
         let techsRes;
         try {
-          techsRes = await axios.get("https://nailcare.ccs4thyear.com/api/technicians", {
+          techsRes = await axios.get("https://lashes.ccs4thyear.com/api/technicians", {
             headers: { Authorization: `Bearer ${token}` },
           });
           console.log("Technicians loaded:", techsRes.data);
@@ -569,7 +571,7 @@
           return;
         }
 
-        $servicesSelect.html('<option value="">Select nail care service</option>');
+        $servicesSelect.html('<option value="">Select lash care service</option>');
         
         if (servicesRes.data && servicesRes.data.length > 0) {
           servicesRes.data.forEach((item) => {
@@ -613,104 +615,6 @@
       }
     }
 
-    async function loadAppointmentForReschedule(appointmentId) {
-      const token = localStorage.getItem("authToken");
-      
-      if (!token) {
-        alert("Please login to reschedule an appointment.");
-        window.location.href = "login.html";
-        return;
-      }
-
-      try {
-        const res = await axios.get(
-          `https://nailcare.ccs4thyear.com/api/appointments/${appointmentId}`,
-          {
-            headers: { Authorization: `Bearer ${token}` },
-          }
-        );
-
-        const appointment = res.data;
-        
-        // Wait for services and technicians to load, then pre-fill the form
-        // Use a polling approach to wait for dropdowns to be populated
-        const checkAndFill = setInterval(() => {
-          const $serviceSelect = $("#serviceSelect");
-          const $technicianSelect = $("#technicianSelect");
-          
-          // Check if dropdowns have options loaded (more than just placeholder)
-          if ($serviceSelect.length && $serviceSelect.find('option').length > 1 && 
-              $technicianSelect.length && $technicianSelect.find('option').length > 1) {
-            clearInterval(checkAndFill);
-            
-            // Pre-fill service
-            if (appointment.service_name) {
-              // Find the option that matches the service name
-              $serviceSelect.find('option').each(function() {
-                if ($(this).text().includes(appointment.service_name)) {
-                  $serviceSelect.val($(this).val());
-                  return false; // break
-                }
-              });
-            }
-
-            // Pre-fill technician - find by email since we're using user IDs
-            if (appointment.technician && appointment.technician.email) {
-              // Find technician user by email
-              $technicianSelect.find('option').each(function() {
-                if ($(this).text().includes(appointment.technician.email)) {
-                  $technicianSelect.val($(this).val());
-                  return false; // break
-                }
-              });
-            }
-
-          // Pre-fill date
-          const $dateInput = $("#dateInput");
-          if ($dateInput.length && appointment.date) {
-            const appointmentDate = new Date(appointment.date);
-            const year = appointmentDate.getFullYear();
-            const month = String(appointmentDate.getMonth() + 1).padStart(2, '0');
-            const day = String(appointmentDate.getDate()).padStart(2, '0');
-            $dateInput.val(`${year}-${month}-${day}`);
-          }
-
-          // Pre-fill time
-          const $timeSelect = $("#timeSlotSelect");
-          if ($timeSelect.length && appointment.time) {
-            // Extract time portion
-            let timeStr = appointment.time;
-            if (typeof timeStr === 'string' && timeStr.includes(' ')) {
-              timeStr = timeStr.split(' ')[1];
-            }
-            timeStr = timeStr.substring(0, 8); // Get HH:MM:SS
-            
-            // Find matching time slot
-            $timeSelect.find('option').each(function() {
-              if ($(this).val() === timeStr) {
-                $timeSelect.val($(this).val());
-                return false; // break
-              }
-            });
-          }
-
-            // Update button text
-            const $submitButton = $('#appointmentForm button[type="submit"]');
-            if ($submitButton.length) {
-              $submitButton.text("Reschedule Appointment");
-            }
-          }
-        }, 200); // Check every 200ms
-        
-        // Timeout after 10 seconds
-        setTimeout(() => clearInterval(checkAndFill), 10000);
-
-      } catch (err) {
-        console.error("Error loading appointment:", err);
-        alert("Failed to load appointment data. Redirecting to appointments page.");
-        window.location.href = "appointments.html";
-      }
-    }
   </script>
 </body>
 </html>

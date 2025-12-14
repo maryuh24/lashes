@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dashboard - Nails Booking</title>
+  <title>Dashboard - Lashes Booking</title>
  <style>
     * {
       margin: 0;
@@ -13,16 +13,22 @@
     }
 
     :root {
-      --primary-bg: #ffffff;
-      --secondary-bg: #f5f5f5;
-      --accent-primary: #000000;
-      --accent-secondary: #333333;
-      --text-primary: #000000;
-      --text-secondary: #666666;
-      --border-color: #e0e0e0;
+      --primary-bg: #faf5ff;
+      --secondary-bg: #f3e8ff;
+      --accent-primary: #9333ea;
+      --accent-secondary: #a855f7;
+      --accent-gradient: linear-gradient(135deg, #9333ea 0%, #ec4899 100%);
+      --text-primary: #1f2937;
+      --text-secondary: #6b7280;
+      --border-color: #e9d5ff;
       --card-bg: #ffffff;
-      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-      --shadow-hover: 0 20px 25px -5px rgba(0, 0, 0, 0.15), 0 10px 10px -5px rgba(0, 0, 0, 0.1);
+      --success-color: #10b981;
+      --danger-color: #ef4444;
+      --warning-color: #f59e0b;
+      --info-color: #3b82f6;
+      --shadow: 0 4px 6px -1px rgba(147, 51, 234, 0.1), 0 2px 4px -1px rgba(147, 51, 234, 0.06);
+      --shadow-hover: 0 20px 25px -5px rgba(147, 51, 234, 0.2), 0 10px 10px -5px rgba(147, 51, 234, 0.15);
+      --shadow-lg: 0 10px 15px -3px rgba(147, 51, 234, 0.15), 0 4px 6px -2px rgba(147, 51, 234, 0.1);
     }
 
     body {
@@ -44,7 +50,7 @@
       width: 100%;
       height: 100%;
       background: 
-        repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(0, 0, 0, 0.02) 10px, rgba(0, 0, 0, 0.02) 20px);
+        repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(147, 51, 234, 0.03) 10px, rgba(147, 51, 234, 0.03) 20px);
       z-index: -1;
     }
 
@@ -73,7 +79,10 @@
     .logo {
       font-size: 1.5rem;
       font-weight: 700;
-      color: var(--text-primary);
+      background: var(--accent-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
       text-decoration: none;
       letter-spacing: -0.5px;
     }
@@ -109,7 +118,7 @@
       height: 2px;
       bottom: -6px;
       left: 0;
-      background: var(--accent-primary);
+      background: var(--accent-gradient);
       border-radius: 2px;
     }
 
@@ -197,11 +206,12 @@
     #searchInput:focus {
       outline: none;
       border-color: var(--accent-primary);
-      box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1), var(--shadow);
+      box-shadow: 0 0 0 3px rgba(147, 51, 234, 0.1), var(--shadow);
+      background: #ffffff;
     }
 
     .add-btn {
-      background: var(--accent-primary);
+      background: var(--accent-gradient);
       border: none;
       border-radius: 12px;
       color: white;
@@ -292,13 +302,13 @@
     }
 
     .edit-btn {
-      background: rgba(0, 0, 0, 0.1);
+      background: rgba(147, 51, 234, 0.1);
       color: var(--accent-primary);
-      border: 1px solid rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(147, 51, 234, 0.3);
     }
 
     .edit-btn:hover {
-      background: var(--accent-primary);
+      background: var(--accent-gradient);
       color: white;
       transform: translateY(-2px);
       box-shadow: var(--shadow-hover);
@@ -317,7 +327,7 @@
       box-shadow: var(--shadow-hover);
     }
 
-    .nail-image {
+    .lash-image {
       width: 80px;
       height: 80px;
       object-fit: cover;
@@ -427,7 +437,7 @@
         margin-right: 0.25rem;
       }
 
-      .nail-image {
+      .lash-image {
         width: 40px;
         height: 40px;
       }
@@ -502,7 +512,7 @@
 
   <nav>
     <div class="nav-container">
-      <a href="dashboard.html" class="logo">Nail Care Booking</a>
+      <a href="dashboard.html" class="logo">Lash Care Booking</a>
       <ul class="nav-menu" id="nav-menu">
         <!-- Navigation will be populated by JavaScript based on role -->
       </ul>
@@ -528,11 +538,11 @@
   </main>
 
   <footer>
-    <p>&copy; 2025 Nail Care Booking. All rights reserved.</p>
+    <p>&copy; 2025 Lash Care Booking. All rights reserved.</p>
   </footer>
 
-  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
   <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
   <script src="js/auth.js"></script>
   <script src="js/main.js"></script>
   
@@ -561,7 +571,7 @@
         navItems = [
           { href: 'dashboard.html', text: 'Dashboard', active: true },
           { href: 'appointments.html', text: 'Appointments' },
-          { href: 'nail-services.html', text: 'Nail Services' },
+          { href: 'lash-services.html', text: 'Lash Services' },
           { href: 'manage-users.html', text: 'Manage Users' },
           { href: 'profile.html', text: 'Profile' },
           { href: '#', text: 'Logout', id: 'logoutBtn' }
@@ -616,12 +626,12 @@
         await loadTechnicianStatistics($contentEl);
       } else {
         $titleEl.text('Client Dashboard');
-        $subtitleEl.text('Book and manage your nail care appointments');
+        $subtitleEl.text('Book and manage your lash care appointments');
         $contentEl.html(`
           <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1.5rem; margin-bottom: 2rem;">
             <a href="book_appointment.html" class="table-container" style="padding: 2rem; text-align: center; text-decoration: none; color: var(--text-primary); display: block;">
               <h3 style="margin-bottom: 0.5rem;">Book Appointment</h3>
-              <p style="color: var(--text-secondary);">Schedule a new nail care service</p>
+              <p style="color: var(--text-secondary);">Schedule a new lash care service</p>
             </a>
             <a href="appointments.html" class="table-container" style="padding: 2rem; text-align: center; text-decoration: none; color: var(--text-primary); display: block;">
               <h3 style="margin-bottom: 0.5rem;">My Appointments</h3>
@@ -638,13 +648,13 @@
         
         // Fetch all data in parallel
         const [appointmentsRes, servicesRes, usersRes] = await Promise.all([
-          axios.get('https://nailcare.ccs4thyear.com/api/appointments', {
+          axios.get('https://lashes.ccs4thyear.com/api/appointments', {
             headers: { Authorization: `Bearer ${token}` }
           }).catch(() => ({ data: [] })),
-          axios.get('https://nailcare.ccs4thyear.com/api/nail-services', {
+          axios.get('https://lashes.ccs4thyear.com/api/lash-services', {
             headers: { Authorization: `Bearer ${token}` }
           }).catch(() => ({ data: [] })),
-          axios.get('https://nailcare.ccs4thyear.com/api/users', {
+          axios.get('https://lashes.ccs4thyear.com/api/users', {
             headers: { Authorization: `Bearer ${token}` }
           }).catch(() => ({ data: [] }))
         ]);
@@ -809,7 +819,7 @@
             <h3 style="margin-bottom: 1rem;">Quick Actions</h3>
             <div style="display:flex; flex-wrap:wrap; gap:0.75rem;">
               <a href="appointments.html" style="padding:0.85rem 1.6rem; background: var(--accent-primary); color:#ffffff; text-decoration:none; border-radius:999px; font-size:0.9rem;">📅 View Appointments</a>
-              <a href="nail-services.html" style="padding:0.85rem 1.6rem; background:#111827; color:#ffffff; text-decoration:none; border-radius:999px; font-size:0.9rem;">💅 Manage Services</a>
+              <a href="lash-services.html" style="padding:0.85rem 1.6rem; background:#111827; color:#ffffff; text-decoration:none; border-radius:999px; font-size:0.9rem;">💅 Manage Services</a>
               <a href="manage-users.html" style="padding:0.85rem 1.6rem; background:#374151; color:#ffffff; text-decoration:none; border-radius:999px; font-size:0.9rem;">👤 Manage Users</a>
             </div>
           </div>
@@ -829,7 +839,7 @@
             </div>
             <div class="table-container" style="padding: 1.75rem; text-align: center;">
               <h3 style="font-size: 2rem; margin-bottom: 0.25rem;">0</h3>
-              <p style="color: var(--text-secondary);">Nail Services</p>
+              <p style="color: var(--text-secondary);">Lash Services</p>
             </div>
             <div class="table-container" style="padding: 1.75rem; text-align: center;">
               <h3 style="font-size: 2rem; margin-bottom: 0.25rem;">0</h3>
@@ -840,7 +850,7 @@
             <h3 style="margin-bottom: 1rem;">Quick Actions</h3>
             <div style="display:flex; flex-wrap:wrap; gap:0.75rem;">
               <a href="appointments.html" style="padding:0.85rem 1.6rem; background: var(--accent-primary); color:#ffffff; text-decoration:none; border-radius:999px; font-size:0.9rem;">📅 View Appointments</a>
-              <a href="nail-services.html" style="padding:0.85rem 1.6rem; background:#111827; color:#ffffff; text-decoration:none; border-radius:999px; font-size:0.9rem;">💅 Manage Services</a>
+              <a href="lash-services.html" style="padding:0.85rem 1.6rem; background:#111827; color:#ffffff; text-decoration:none; border-radius:999px; font-size:0.9rem;">💅 Manage Services</a>
               <a href="manage-users.html" style="padding:0.85rem 1.6rem; background:#374151; color:#ffffff; text-decoration:none; border-radius:999px; font-size:0.9rem;">👤 Manage Users</a>
             </div>
           </div>
@@ -853,7 +863,7 @@
         const token = localStorage.getItem('authToken');
         
         // Fetch appointments for this technician
-        const appointmentsRes = await axios.get('https://nailcare.ccs4thyear.com/api/appointments', {
+        const appointmentsRes = await axios.get('https://lashes.ccs4thyear.com/api/appointments', {
           headers: { Authorization: `Bearer ${token}` }
         }).catch(() => ({ data: [] }));
 
@@ -1016,7 +1026,7 @@
         }
 
         // Validate token by making a test request
-        const validationRes = await fetch("https://nailcare.ccs4thyear.com/api/nail-services", {
+        const validationRes = await fetch("https://lashes.ccs4thyear.com/api/lash-services", {
           headers: { 'Authorization': `Bearer ${token}` }
         });
 
@@ -1032,8 +1042,8 @@
           throw new Error('Token validation failed');
         }
 
-        // Token is valid, load nail services
-        await loadNailServices();
+        // Token is valid, load lash services
+        await loadLashServices();
 
       } catch (err) {
         console.error("Token validation failed:", err);
@@ -1053,7 +1063,7 @@
       return false;
     }
 
-    async function loadNailServices() {
+    async function loadLashServices() {
       try {
         const token = localStorage.getItem('authToken');
         if (!token) {
@@ -1062,19 +1072,19 @@
           
         }
 
-        const res = await fetch("https://nailcare.ccs4thyear.com/api/nail-services", {
+        const res = await fetch("https://lashes.ccs4thyear.com/api/lash-services", {
           headers: { 'Authorization': `Bearer ${token}` }
         });
 
         if (await handleUnauthorizedResponse(res)) return;
 
-        const nailServices = await res.json();
-        const $tbody = $("#nailServicesTable tbody");
+        const lashServices = await res.json();
+        const $tbody = $("#lashServicesTable tbody");
         $tbody.empty();
 
-        const baseUrl = "https://nailcare.ccs4thyear.com/";
+        const baseUrl = "https://lashes.ccs4thyear.com/";
 
-        nailServices.forEach(service => {
+        lashServices.forEach(service => {
           const $tr = $(`
             <tr>
               <td>${service.id}</td>
@@ -1089,7 +1099,7 @@
                 >
               </td>
               <td>
-                <button class="action-btn edit-btn" onclick="editNailService(${service.id})">Edit</button>
+                <button class="action-btn edit-btn" onclick="editLashService(${service.id})">Edit</button>
                 <button class="action-btn delete-btn" data-id="${service.id}">Delete</button>
               </td>
             </tr>
@@ -1100,8 +1110,8 @@
 
         // Add event listeners for delete buttons
         $('.delete-btn').on('click', function() {
-          const nailServiceId = $(this).attr('data-id');
-          deleteSnack(nailServiceId); // TODO: rename deleteSnack to deleteNailService when backend/frontend are aligned
+          const lashServiceId = $(this).attr('data-id');
+          deleteLashService(lashServiceId);
         });
 
       } catch (err) {

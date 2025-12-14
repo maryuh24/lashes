@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Profile - Nails Booking</title>
+  <title>Profile - Lashes Booking</title>
 <style>
     * {
       margin: 0;
@@ -12,16 +12,22 @@
     }
 
     :root {
-      --primary-bg: #ffffff;
-      --secondary-bg: #f5f5f5;
-      --accent-primary: #000000;
-      --accent-secondary: #333333;
-      --text-primary: #000000;
-      --text-secondary: #666666;
-      --border-color: #e0e0e0;
+      --primary-bg: #faf5ff;
+      --secondary-bg: #f3e8ff;
+      --accent-primary: #9333ea;
+      --accent-secondary: #a855f7;
+      --accent-gradient: linear-gradient(135deg, #9333ea 0%, #ec4899 100%);
+      --text-primary: #1f2937;
+      --text-secondary: #6b7280;
+      --border-color: #e9d5ff;
       --card-bg: #ffffff;
-      --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-      --shadow-hover: 0 20px 25px -5px rgba(0, 0, 0, 0.15), 0 10px 10px -5px rgba(0, 0, 0, 0.1);
+      --success-color: #10b981;
+      --danger-color: #ef4444;
+      --warning-color: #f59e0b;
+      --info-color: #3b82f6;
+      --shadow: 0 4px 6px -1px rgba(147, 51, 234, 0.1), 0 2px 4px -1px rgba(147, 51, 234, 0.06);
+      --shadow-hover: 0 20px 25px -5px rgba(147, 51, 234, 0.2), 0 10px 10px -5px rgba(147, 51, 234, 0.15);
+      --shadow-lg: 0 10px 15px -3px rgba(147, 51, 234, 0.15), 0 4px 6px -2px rgba(147, 51, 234, 0.1);
     }
 
     body {
@@ -43,7 +49,7 @@
       width: 100%;
       height: 100%;
       background: 
-        repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(0, 0, 0, 0.02) 10px, rgba(0, 0, 0, 0.02) 20px);
+        repeating-linear-gradient(45deg, transparent, transparent 10px, rgba(147, 51, 234, 0.03) 10px, rgba(147, 51, 234, 0.03) 20px);
       z-index: -1;
     }
 
@@ -72,7 +78,10 @@
     .logo {
       font-size: 1.5rem;
       font-weight: 700;
-      color: var(--text-primary);
+      background: var(--accent-gradient);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
       text-decoration: none;
       letter-spacing: -0.5px;
     }
@@ -155,7 +164,7 @@
       position: absolute;
       bottom: 0;
       right: 0;
-      background: var(--accent-primary);
+      background: var(--accent-gradient);
       color: white;
       border-radius: 50%;
       width: 36px;
@@ -267,7 +276,7 @@
     }
 
     button[type="submit"] {
-      background: var(--accent-primary);
+      background: var(--accent-gradient);
     }
 
     button[type="button"] {
@@ -401,7 +410,7 @@
       
       <div class="profile-header">
         <div class="avatar-container">
-    <img id="avatarImage" class="avatar" src="https://nailcare.ccs4thyear.com/uploads/profile.png" alt="Profile Avatar">
+    <img id="avatarImage" class="avatar" src="https://lashes.ccs4thyear.com/uploads/profile.png" alt="Profile Avatar">
     <label class="avatar-upload" title="Change profile photo">
         <i>📷</i>
         <input type="file" id="avatarInput" accept="image/*">
@@ -470,7 +479,7 @@
   </main>
 
   <footer>
-    <p>&copy; 2025 Nails Booking. All rights reserved.</p>
+    <p>&copy; 2025 Lashes Booking. All rights reserved.</p>
   </footer>
 
   <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
@@ -502,7 +511,7 @@ $(document).ready(async function() {
 
         // Fetch fresh data from API
         try {
-            const response = await axios.get('https://nailcare.ccs4thyear.com/api/profile', {
+            const response = await axios.get('https://lashes.ccs4thyear.com/api/profile', {
                 headers: {
                     'Authorization': `Bearer ${authToken}`
                 }
@@ -541,7 +550,7 @@ function populateProfileForm(data) {
     $('#email').val(data.email || '');
     
 // Set default avatar URL
-let avatarUrl = 'https://nailcare.ccs4thyear.com/uploads/profile.png';
+let avatarUrl = 'https://lashes.ccs4thyear.com/uploads/profile.png';
 
 // Prefer server-provided avatar URL if available
 if (data.avatar_url) {
@@ -551,7 +560,7 @@ if (data.avatar_url) {
     if (data.avatar_path.startsWith('http')) {
         avatarUrl = data.avatar_path;
     } else {
-        avatarUrl = `https://nailcare.ccs4thyear.com/${data.avatar_path.replace(/^\/+/, '')}`;
+        avatarUrl = `https://lashes.ccs4thyear.com/${data.avatar_path.replace(/^\/+/, '')}`;
     }
 }
 
@@ -580,7 +589,7 @@ console.log('Avatar URL:', avatarUrl);
             
             console.log('Updating profile (text only)...');
             
-            const response = await axios.post('https://nailcare.ccs4thyear.com/api/profile/update', formData, {
+            const response = await axios.post('https://lashes.ccs4thyear.com/api/profile/update', formData, {
                 headers: {
                     'Authorization': `Bearer ${authToken}`
                 }
@@ -658,7 +667,7 @@ $('#passwordForm').on('submit', async function(e) {
   }
 
   try {
-    const response = await axios.post('https://nailcare.ccs4thyear.com/api/change-password', {
+    const response = await axios.post('https://lashes.ccs4thyear.com/api/change-password', {
       current_password: currentPassword,
       new_password: newPassword,
       confirm_password: confirmPassword,
@@ -735,7 +744,7 @@ $('#passwordForm').on('submit', async function(e) {
             const authToken = localStorage.getItem('authToken');
             console.log('Uploading avatar...');
             
-            const response = await axios.post('https://nailcare.ccs4thyear.com/api/profile/avatar', formData, {
+            const response = await axios.post('https://lashes.ccs4thyear.com/api/profile/avatar', formData, {
                 headers: {
                     'Authorization': `Bearer ${authToken}`
                 }
@@ -744,7 +753,7 @@ $('#passwordForm').on('submit', async function(e) {
             if (response.status === 200) {
                 showMessage('Profile picture updated successfully!', 'success');
                 // Update avatar image with the server path
-                const avatarUrl = `https://nailcare.ccs4thyear.com/${response.data.avatar_path}`;
+                const avatarUrl = `https://lashes.ccs4thyear.com/${response.data.avatar_path}`;
                 $('#avatarImage').attr('src', avatarUrl);
                 console.log('Avatar updated to:', avatarUrl);
                 // Update user data in localStorage

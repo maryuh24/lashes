@@ -26,7 +26,7 @@ $(document).ready(function() {
         const controller = new AbortController();
         const timeoutId = setTimeout(() => controller.abort(), 30000);
 
-        const response = await axios.post("https://nailcare.ccs4thyear.com/api/register", data, {
+        const response = await axios.post("https://lashes.ccs4thyear.com/api/register", data, {
           signal: controller.signal,
           headers: {
             'Content-Type': 'application/json'
@@ -69,7 +69,7 @@ async function logout() {
   }
 
   try {
-    const response = await axios.post("https://nailcare.ccs4thyear.com/api/logout", { token: token });
+    const response = await axios.post("https://lashes.ccs4thyear.com/api/logout", { token: token });
     console.log("Logout response:", response.data);
 
     if (response.status === 200) {
@@ -95,8 +95,8 @@ async function logout() {
   }
 }
 
-// Load Nail Services Function
-async function loadNailServices() {
+// Load Lash Services Function
+async function loadLashServices() {
   try {
     const token = localStorage.getItem('authToken');
     if (!token) {
@@ -104,28 +104,28 @@ async function loadNailServices() {
       return;
     }
 
-    const response = await axios.get('https://nailcare.ccs4thyear.com/api/nail-services', {
+    const response = await axios.get('https://lashes.ccs4thyear.com/api/lash-services', {
       headers: {
         'Authorization': `Bearer ${token}`,
         'Content-Type': 'application/json'
       }
     });
     
-    const nailServices = response.data;
-    const $tableBody = $('#nailServicesTable tbody');
+    const lashServices = response.data;
+    const $tableBody = $('#lashServicesTable tbody');
     
     if (!$tableBody.length) return;
 
     $tableBody.empty();
     
-    if (nailServices.length === 0) {
-      $tableBody.html('<tr><td colspan="6" style="text-align: center;">No nail services found. Add your first service!</td></tr>');
+    if (lashServices.length === 0) {
+      $tableBody.html('<tr><td colspan="6" style="text-align: center;">No lash services found. Add your first service!</td></tr>');
       return;
     }
     
-    nailServices.forEach(service => {
+    lashServices.forEach(service => {
       const imagePath = service.image_path || 'uploads/default.png';
-      const imageUrl = `https://nailcare.ccs4thyear.com/${imagePath}`;
+      const imageUrl = `https://lashes.ccs4thyear.com/${imagePath}`;
       
       const row = $(`
         <tr>
@@ -136,13 +136,13 @@ async function loadNailServices() {
             <img 
               src="${imageUrl}" 
               alt="${service.service_name}" 
-              class="nail-image"
-              onerror="this.onerror=null; this.src='https://nailcare.ccs4thyear.com/uploads/default.png';"
+              class="lash-image"
+              onerror="this.onerror=null; this.src='https://lashes.ccs4thyear.com/uploads/default.png';"
             >
           </td>
           <td>${service.created_at ? new Date(service.created_at).toLocaleString() : 'N/A'}</td>
           <td>
-            <button class="action-btn edit-btn" onclick="editNailService(${service.id})">Edit</button>
+            <button class="action-btn edit-btn" onclick="editLashService(${service.id})">Edit</button>
             <button class="action-btn delete-btn" data-id="${service.id}">Delete</button>
           </td>
         </tr>
@@ -151,19 +151,19 @@ async function loadNailServices() {
     });
     
   } catch (err) {
-    console.error('Error loading nail services:', err);
+    console.error('Error loading lash services:', err);
     if (err.response && err.response.status === 401) {
       localStorage.removeItem('authToken');
       alert('Session expired. Please login again.');
       window.location.href = 'login.html';
       return;
     }
-    const $tableBody = $('#nailServicesTable tbody');
+    const $tableBody = $('#lashServicesTable tbody');
     if ($tableBody.length) {
       const errorMessage = err.response && err.response.data && err.response.data.error 
         ? err.response.data.error 
         : err.message;
-      $tableBody.html(`<tr><td colspan="6" style="text-align: center; color: red;">Error loading nail services: ${errorMessage}</td></tr>`);
+      $tableBody.html(`<tr><td colspan="6" style="text-align: center; color: red;">Error loading lash services: ${errorMessage}</td></tr>`);
     }
   }
 }
@@ -174,7 +174,7 @@ $(document).ready(function() {
   if ($searchInput.length) {
     $searchInput.on('input', function() {
       const searchTerm = $(this).val().toLowerCase();
-      const $rows = $('#nailServicesTable tbody tr');
+      const $rows = $('#lashServicesTable tbody tr');
       
       $rows.each(function() {
         const $row = $(this);
@@ -189,7 +189,7 @@ $(document).ready(function() {
   }
 });
 
-// Edit nail service function
-function editNailService(id) {
-  window.location.href = `edit_nail_service.html?id=${id}`;
+// Edit lash service function
+function editLashService(id) {
+  window.location.href = `edit_lash_service.html?id=${id}`;
 }

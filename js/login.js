@@ -14,7 +14,7 @@ $(document).ready(function() {
       };
 
       try {
-        const response = await axios.post("https://nailcare.ccs4thyear.com/api/login", data);
+        const response = await axios.post("https://lashes.ccs4thyear.com/api/login", data);
 
         // ✅ Store token and basic user info (including role)
         localStorage.setItem("authToken", response.data.token);

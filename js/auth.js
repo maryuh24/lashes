@@ -1,4 +1,8 @@
-// auth.js
+// auth.js - jQuery-based authentication utilities
+
+$(document).ready(function() {
+  // Initialize auth functions when DOM is ready
+});
 
 function requireAuth() {
   const token = localStorage.getItem('authToken');

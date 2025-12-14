@@ -608,7 +608,7 @@
       }
 
       try {
-        const res = await axios.get("https://lashes.ccs4thyear.com/api/appointments", {
+        const res = await axios.get("https://lashes.ccs4thyear.com/appointments", {
           headers: { Authorization: `Bearer ${token}` },
         });
 
@@ -718,7 +718,7 @@
 
       try {
         await axios.put(
-          `https://lashes.ccs4thyear.com/api/appointments/${id}`,
+          `https://lashes.ccs4thyear.com/appointments/${id}`,
           { status: newStatus },
           { headers: { Authorization: `Bearer ${token}` } }
         );

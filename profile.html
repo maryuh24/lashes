@@ -486,16 +486,27 @@
     // Default avatar as base64 (fallback when image fails to load)
     const DEFAULT_AVATAR = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjAiIGhlaWdodD0iMTIwIiB2aWV3Qm94PSIwIDAgMTIwIDEyMCI+PGNpcmNsZSBjeD0iNjAiIGN5PSI2MCIgcj0iNjAiIGZpbGw9IiNFNUQ1QzUiLz48Y2lyY2xlIGN4PSI2MCIgY3k9IjQ1IiByPSIyMCIgZmlsbD0iI0E2N0M1MiIvPjxwYXRoIGQ9Ik0yNSAxMDVjMC0yNSAxNS00MCAzNS00MHMzNSAxNSAzNSA0MCIgZmlsbD0iI0E2N0M1MiIvPjwvc3ZnPg==';
     
-    // Set default avatar immediately
-    const avatarImg = document.getElementById('avatarImage');
-    avatarImg.src = DEFAULT_AVATAR;
+    // Helper function to set avatar with error handling
+    function setAvatarSrc(url) {
+        const img = document.getElementById('avatarImage');
+        console.log('Setting avatar src to:', url);
+        
+        // Set up error handler BEFORE changing src
+        img.onerror = function() {
+            console.warn('Image failed to load:', url);
+            this.onerror = null;
+            this.src = DEFAULT_AVATAR;
+        };
+        
+        img.onload = function() {
+            console.log('Image loaded successfully:', url);
+        };
+        
+        img.src = url;
+    }
     
-    // Handle image load errors - show default avatar
-    avatarImg.onerror = function() {
-        console.warn('Avatar failed to load, using default');
-        this.onerror = null; // Prevent infinite loop
-        this.src = DEFAULT_AVATAR;
-    };
+    // Set default avatar immediately
+    setAvatarSrc(DEFAULT_AVATAR);
     
     // Get user data from localStorage or API
 let authToken;
@@ -565,39 +576,20 @@ function populateProfileForm(data) {
     loadAvatarImage(data);
 }
 
-// Separate function to handle avatar loading with proper error handling
+// Separate function to handle avatar loading - simplified and direct
 function loadAvatarImage(data) {
-    let avatarUrl = null;
-
-    // Always construct URL from avatar_path using our API_BASE_URL
-    // This ensures we use the correct production URL
+    console.log('loadAvatarImage called with:', { avatar_url: data.avatar_url, avatar_path: data.avatar_path });
+    
     if (data.avatar_path && data.avatar_path !== 'uploads/profile.png') {
-        // Always use getImageUrl to construct with correct base URL
-        avatarUrl = API_BASE_URL + '/' + data.avatar_path.replace(/^\//, '');
-    }
-
-    console.log('Avatar data:', { avatar_url: data.avatar_url, avatar_path: data.avatar_path });
-    console.log('Constructed avatar URL:', avatarUrl);
-
-    if (avatarUrl) {
-        // Add cache-busting
+        // Construct URL with API_BASE_URL and cache-busting
+        const avatarUrl = API_BASE_URL + '/' + data.avatar_path.replace(/^\//, '');
         const cacheBuster = '?t=' + new Date().getTime();
         const finalUrl = avatarUrl + cacheBuster;
         
-        // Create a test image to check if URL works
-        const testImg = new Image();
-        testImg.onload = function() {
-            console.log('Avatar loaded successfully:', finalUrl);
-            $('#avatarImage').attr('src', finalUrl);
-        };
-        testImg.onerror = function() {
-            console.warn('Avatar URL failed, using default:', finalUrl);
-            $('#avatarImage').attr('src', DEFAULT_AVATAR);
-        };
-        testImg.src = finalUrl;
+        setAvatarSrc(finalUrl);
     } else {
-        console.log('No custom avatar, using default');
-        $('#avatarImage').attr('src', DEFAULT_AVATAR);
+        console.log('No custom avatar path, using default');
+        setAvatarSrc(DEFAULT_AVATAR);
     }
 }
     // Handle profile form submission - TEXT ONLY
@@ -796,35 +788,26 @@ $('#passwordForm').on('submit', async function(e) {
                 
                 const data = response.data;
                 
-                // Update user data in localStorage first
+                // Update user data in localStorage
                 if (userData) {
                     userData.avatar_path = data.avatar_path || data.path;
                     userData.avatar_url = data.avatar_url;
                     localStorage.setItem('userData', JSON.stringify(userData));
                 }
                 
-                // The preview is already showing from FileReader
-                // Now try to load the server URL to verify it works
-                // Always construct URL using API_BASE_URL for consistency
-                let serverUrl = data.avatar_path ? API_BASE_URL + '/' + data.avatar_path.replace(/^\//, '') : null;
-                if (serverUrl) {
+                // Update to the server URL after a short delay
+                if (data.avatar_path) {
+                    const serverUrl = API_BASE_URL + '/' + data.avatar_path.replace(/^\//, '');
                     const cacheBuster = '?t=' + new Date().getTime();
                     const finalUrl = serverUrl + cacheBuster;
                     
-                    // Test if server image loads
-                    const testImg = new Image();
-                    testImg.onload = function() {
-                        console.log('Server avatar loaded:', finalUrl);
-                        $('#avatarImage').attr('src', finalUrl);
-                    };
-                    testImg.onerror = function() {
-                        console.warn('Server avatar failed to load, keeping preview');
-                        // Keep the FileReader preview since server image failed
-                    };
-                    testImg.src = finalUrl;
+                    console.log('Upload success, setting avatar to:', finalUrl);
+                    
+                    // Small delay to ensure file is fully written on server
+                    setTimeout(() => {
+                        setAvatarSrc(finalUrl);
+                    }, 500);
                 }
-                
-                console.log('Avatar updated - path:', data.avatar_path, 'url:', data.avatar_url);
             } else {
                 throw new Error(response.data.error || 'Failed to update profile picture');
             }

@@ -483,8 +483,19 @@
   <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
   <script src="js/config.js"></script>
   <script>
-    // Set default avatar immediately after config loads
-    document.getElementById('avatarImage').src = getImageUrl('uploads/profile.png');
+    // Default avatar as base64 (fallback when image fails to load)
+    const DEFAULT_AVATAR = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjAiIGhlaWdodD0iMTIwIiB2aWV3Qm94PSIwIDAgMTIwIDEyMCI+PGNpcmNsZSBjeD0iNjAiIGN5PSI2MCIgcj0iNjAiIGZpbGw9IiNFNUQ1QzUiLz48Y2lyY2xlIGN4PSI2MCIgY3k9IjQ1IiByPSIyMCIgZmlsbD0iI0E2N0M1MiIvPjxwYXRoIGQ9Ik0yNSAxMDVjMC0yNSAxNS00MCAzNS00MHMzNSAxNSAzNSA0MCIgZmlsbD0iI0E2N0M1MiIvPjwvc3ZnPg==';
+    
+    // Set default avatar immediately
+    const avatarImg = document.getElementById('avatarImage');
+    avatarImg.src = DEFAULT_AVATAR;
+    
+    // Handle image load errors - show default avatar
+    avatarImg.onerror = function() {
+        console.warn('Avatar failed to load, using default');
+        this.onerror = null; // Prevent infinite loop
+        this.src = DEFAULT_AVATAR;
+    };
     
     // Get user data from localStorage or API
 let authToken;
@@ -550,24 +561,44 @@ function populateProfileForm(data) {
     $('#username').val(data.username || '');
     $('#email').val(data.email || '');
     
-    // Set default avatar URL
-    let avatarUrl = getImageUrl('uploads/profile.png');
+    // Load avatar image
+    loadAvatarImage(data);
+}
 
-    // Prefer server-provided avatar URL if available
-    if (data.avatar_url) {
-        avatarUrl = data.avatar_url;
-    } else if (data.avatar_path) {
-        // Fallback if avatar_url missing
-        avatarUrl = getImageUrl(data.avatar_path);
+// Separate function to handle avatar loading with proper error handling
+function loadAvatarImage(data) {
+    let avatarUrl = null;
+
+    // Always construct URL from avatar_path using our API_BASE_URL
+    // This ensures we use the correct production URL
+    if (data.avatar_path && data.avatar_path !== 'uploads/profile.png') {
+        // Always use getImageUrl to construct with correct base URL
+        avatarUrl = API_BASE_URL + '/' + data.avatar_path.replace(/^\//, '');
     }
 
-    // Add cache-busting to ensure fresh image loads
-    const cacheBuster = '?t=' + new Date().getTime();
-    avatarUrl = avatarUrl + cacheBuster;
+    console.log('Avatar data:', { avatar_url: data.avatar_url, avatar_path: data.avatar_path });
+    console.log('Constructed avatar URL:', avatarUrl);
 
-    // Update image source
-    $('#avatarImage').attr('src', avatarUrl);
-    console.log('Avatar URL:', avatarUrl);
+    if (avatarUrl) {
+        // Add cache-busting
+        const cacheBuster = '?t=' + new Date().getTime();
+        const finalUrl = avatarUrl + cacheBuster;
+        
+        // Create a test image to check if URL works
+        const testImg = new Image();
+        testImg.onload = function() {
+            console.log('Avatar loaded successfully:', finalUrl);
+            $('#avatarImage').attr('src', finalUrl);
+        };
+        testImg.onerror = function() {
+            console.warn('Avatar URL failed, using default:', finalUrl);
+            $('#avatarImage').attr('src', DEFAULT_AVATAR);
+        };
+        testImg.src = finalUrl;
+    } else {
+        console.log('No custom avatar, using default');
+        $('#avatarImage').attr('src', DEFAULT_AVATAR);
+    }
 }
     // Handle profile form submission - TEXT ONLY
     $('#profileForm').on('submit', async function(e) {
@@ -763,33 +794,37 @@ $('#passwordForm').on('submit', async function(e) {
             if (response.status === 200) {
                 showMessage('Profile picture updated successfully!', 'success');
                 
-                // Get the avatar URL from response - check multiple possible fields
-                let avatarUrl = '';
                 const data = response.data;
                 
-                // Check if server returns full URL
-                if (data.avatar_url) {
-                    avatarUrl = data.avatar_url;
-                } else if (data.avatar_path) {
-                    avatarUrl = getImageUrl(data.avatar_path);
-                } else if (data.path) {
-                    avatarUrl = getImageUrl(data.path);
-                }
-                
-                // Add cache-busting timestamp to force browser to reload the image
-                if (avatarUrl) {
-                    const cacheBuster = '?t=' + new Date().getTime();
-                    avatarUrl = avatarUrl + cacheBuster;
-                    $('#avatarImage').attr('src', avatarUrl);
-                    console.log('Avatar updated to:', avatarUrl);
-                }
-                
-                // Update user data in localStorage
+                // Update user data in localStorage first
                 if (userData) {
                     userData.avatar_path = data.avatar_path || data.path;
                     userData.avatar_url = data.avatar_url;
                     localStorage.setItem('userData', JSON.stringify(userData));
                 }
+                
+                // The preview is already showing from FileReader
+                // Now try to load the server URL to verify it works
+                // Always construct URL using API_BASE_URL for consistency
+                let serverUrl = data.avatar_path ? API_BASE_URL + '/' + data.avatar_path.replace(/^\//, '') : null;
+                if (serverUrl) {
+                    const cacheBuster = '?t=' + new Date().getTime();
+                    const finalUrl = serverUrl + cacheBuster;
+                    
+                    // Test if server image loads
+                    const testImg = new Image();
+                    testImg.onload = function() {
+                        console.log('Server avatar loaded:', finalUrl);
+                        $('#avatarImage').attr('src', finalUrl);
+                    };
+                    testImg.onerror = function() {
+                        console.warn('Server avatar failed to load, keeping preview');
+                        // Keep the FileReader preview since server image failed
+                    };
+                    testImg.src = finalUrl;
+                }
+                
+                console.log('Avatar updated - path:', data.avatar_path, 'url:', data.avatar_url);
             } else {
                 throw new Error(response.data.error || 'Failed to update profile picture');
             }

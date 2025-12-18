@@ -498,23 +498,64 @@
     // Default avatar as base64 (fallback when image fails to load)
     const DEFAULT_AVATAR = 'data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMjAiIGhlaWdodD0iMTIwIiB2aWV3Qm94PSIwIDAgMTIwIDEyMCI+PGNpcmNsZSBjeD0iNjAiIGN5PSI2MCIgcj0iNjAiIGZpbGw9IiNFNUQ1QzUiLz48Y2lyY2xlIGN4PSI2MCIgY3k9IjQ1IiByPSIyMCIgZmlsbD0iI0E2N0M1MiIvPjxwYXRoIGQ9Ik0yNSAxMDVjMC0yNSAxNS00MCAzNS00MHMzNSAxNSAzNSA0MCIgZmlsbD0iI0E2N0M1MiIvPjwvc3ZnPg==';
     
-    // Helper function to set avatar with error handling
-    function setAvatarSrc(url) {
+    // Store the last successful local preview
+    let lastLocalPreview = null;
+    
+    // Helper function to set avatar with retry logic
+    function setAvatarSrc(url, retryCount = 0, maxRetries = 3) {
         const img = document.getElementById('avatarImage');
-        console.log('Setting avatar src to:', url);
+        console.log('Setting avatar src to:', url, retryCount > 0 ? `(retry ${retryCount})` : '');
         
-        // Set up error handler BEFORE changing src
-        img.onerror = function() {
-            console.warn('Image failed to load:', url);
-            this.onerror = null;
-            this.src = DEFAULT_AVATAR;
-        };
+        // Don't retry for data URLs or default avatar
+        const isDataUrl = url.startsWith('data:');
         
-        img.onload = function() {
+        // Clear previous handlers to avoid stale closures
+        img.onload = null;
+        img.onerror = null;
+        
+        // Create a new Image to test loading first (avoids flickering)
+        const testImg = new Image();
+        
+        testImg.onload = function() {
             console.log('Image loaded successfully:', url);
+            // Only update the actual img if it's still expecting this URL
+            img.src = url;
+            // Clear local preview on successful server load
+            if (!isDataUrl) {
+                lastLocalPreview = null;
+            }
         };
         
-        img.src = url;
+        testImg.onerror = function() {
+            console.warn('Image failed to load:', url);
+            
+            if (!isDataUrl && retryCount < maxRetries) {
+                // Retry with increasing delay
+                const delay = (retryCount + 1) * 1000; // 1s, 2s, 3s
+                console.log(`Retrying in ${delay}ms...`);
+                setTimeout(() => {
+                    // Add new cache buster for retry
+                    const retryUrl = url.split('?')[0] + '?t=' + new Date().getTime();
+                    setAvatarSrc(retryUrl, retryCount + 1, maxRetries);
+                }, delay);
+            } else {
+                // If we have a local preview, use that instead of default
+                if (lastLocalPreview) {
+                    console.log('Using local preview as fallback');
+                    img.src = lastLocalPreview;
+                } else {
+                    console.log('Falling back to default avatar');
+                    img.src = DEFAULT_AVATAR;
+                }
+            }
+        };
+        
+        // For data URLs, load directly without testing
+        if (isDataUrl) {
+            img.src = url;
+        } else {
+            testImg.src = url;
+        }
     }
     
     // Set default avatar immediately
@@ -782,9 +823,10 @@ $('#passwordForm').on('submit', async function(e) {
             return;
         }
         
-        // Show immediate preview while uploading
+        // Show immediate preview while uploading and store it
         const reader = new FileReader();
         reader.onload = function(event) {
+            lastLocalPreview = event.target.result;
             $('#avatarImage').attr('src', event.target.result);
         };
         reader.readAsDataURL(file);
@@ -816,7 +858,7 @@ $('#passwordForm').on('submit', async function(e) {
                     localStorage.setItem('userData', JSON.stringify(userData));
                 }
                 
-                // Update to the server URL after a short delay
+                // Update to the server URL after a delay to ensure file is saved
                 if (data.avatar_path) {
                     const serverUrl = API_BASE_URL + '/' + data.avatar_path.replace(/^\//, '');
                     const cacheBuster = '?t=' + new Date().getTime();
@@ -824,10 +866,10 @@ $('#passwordForm').on('submit', async function(e) {
                     
                     console.log('Upload success, setting avatar to:', finalUrl);
                     
-                    // Small delay to ensure file is fully written on server
+                    // Longer delay to ensure file is fully written on server
                     setTimeout(() => {
-                        setAvatarSrc(finalUrl);
-                    }, 500);
+                        setAvatarSrc(finalUrl, 0, 3); // Use retry logic
+                    }, 1500);
                 }
             } else {
                 throw new Error(response.data.error || 'Failed to update profile picture');
@@ -843,9 +885,13 @@ $('#passwordForm').on('submit', async function(e) {
                 ? error.response.data.error 
                 : error.message;
             showMessage(errorMessage, 'error');
-            // Reload the original avatar on error
-            if (userData && userData.avatar_path) {
-                $('#avatarImage').attr('src', getImageUrl(userData.avatar_path));
+            // Clear local preview and reload original avatar on error
+            lastLocalPreview = null;
+            if (userData && userData.avatar_path && userData.avatar_path !== 'uploads/profile.png') {
+                const avatarUrl = API_BASE_URL + '/' + userData.avatar_path.replace(/^\//, '');
+                setAvatarSrc(avatarUrl + '?t=' + new Date().getTime());
+            } else {
+                setAvatarSrc(DEFAULT_AVATAR);
             }
         }
     });

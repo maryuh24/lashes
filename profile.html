@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Profile - Lashes Booking</title>
+  <title>Profile Lashes Booking</title>
 <style>
     * {
       margin: 0;
@@ -488,7 +488,6 @@
     
     // Get user data from localStorage or API
 let authToken;
-let userData;
 
 $(document).ready(async function() {
   authToken = localStorage.getItem('authToken');
@@ -551,20 +550,24 @@ function populateProfileForm(data) {
     $('#username').val(data.username || '');
     $('#email').val(data.email || '');
     
-// Set default avatar URL
-let avatarUrl = getImageUrl('uploads/profile.png');
+    // Set default avatar URL
+    let avatarUrl = getImageUrl('uploads/profile.png');
 
-// Prefer server-provided avatar URL if available
-if (data.avatar_url) {
-    avatarUrl = data.avatar_url;
+    // Prefer server-provided avatar URL if available
+    if (data.avatar_url) {
+        avatarUrl = data.avatar_url;
     } else if (data.avatar_path) {
-    // Fallback if avatar_url missing
-    avatarUrl = getImageUrl(data.avatar_path);
-}
+        // Fallback if avatar_url missing
+        avatarUrl = getImageUrl(data.avatar_path);
+    }
 
-// Update image source
-$('#avatarImage').attr('src', avatarUrl);
-console.log('Avatar URL:', avatarUrl);
+    // Add cache-busting to ensure fresh image loads
+    const cacheBuster = '?t=' + new Date().getTime();
+    avatarUrl = avatarUrl + cacheBuster;
+
+    // Update image source
+    $('#avatarImage').attr('src', avatarUrl);
+    console.log('Avatar URL:', avatarUrl);
 }
     // Handle profile form submission - TEXT ONLY
     $('#profileForm').on('submit', async function(e) {
@@ -735,6 +738,13 @@ $('#passwordForm').on('submit', async function(e) {
             return;
         }
         
+        // Show immediate preview while uploading
+        const reader = new FileReader();
+        reader.onload = function(event) {
+            $('#avatarImage').attr('src', event.target.result);
+        };
+        reader.readAsDataURL(file);
+        
         const formData = new FormData();
         formData.append('avatar', file);
         
@@ -748,15 +758,36 @@ $('#passwordForm').on('submit', async function(e) {
                 }
             });
             
+            console.log('Avatar upload response:', response.data);
+            
             if (response.status === 200) {
                 showMessage('Profile picture updated successfully!', 'success');
-                // Update avatar image with the server path
-                const avatarUrl = getImageUrl(response.data.avatar_path);
-                $('#avatarImage').attr('src', avatarUrl);
-                console.log('Avatar updated to:', avatarUrl);
+                
+                // Get the avatar URL from response - check multiple possible fields
+                let avatarUrl = '';
+                const data = response.data;
+                
+                // Check if server returns full URL
+                if (data.avatar_url) {
+                    avatarUrl = data.avatar_url;
+                } else if (data.avatar_path) {
+                    avatarUrl = getImageUrl(data.avatar_path);
+                } else if (data.path) {
+                    avatarUrl = getImageUrl(data.path);
+                }
+                
+                // Add cache-busting timestamp to force browser to reload the image
+                if (avatarUrl) {
+                    const cacheBuster = '?t=' + new Date().getTime();
+                    avatarUrl = avatarUrl + cacheBuster;
+                    $('#avatarImage').attr('src', avatarUrl);
+                    console.log('Avatar updated to:', avatarUrl);
+                }
+                
                 // Update user data in localStorage
                 if (userData) {
-                    userData.avatar_path = response.data.avatar_path;
+                    userData.avatar_path = data.avatar_path || data.path;
+                    userData.avatar_url = data.avatar_url;
                     localStorage.setItem('userData', JSON.stringify(userData));
                 }
             } else {
@@ -773,6 +804,10 @@ $('#passwordForm').on('submit', async function(e) {
                 ? error.response.data.error 
                 : error.message;
             showMessage(errorMessage, 'error');
+            // Reload the original avatar on error
+            if (userData && userData.avatar_path) {
+                $('#avatarImage').attr('src', getImageUrl(userData.avatar_path));
+            }
         }
     });
 

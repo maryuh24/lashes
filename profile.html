@@ -173,6 +173,7 @@
       border: 2px solid var(--primary-bg);
       box-shadow: var(--shadow);
       transition: all 0.3s ease;
+      overflow: hidden;
     }
 
     .avatar-upload:hover {
@@ -181,7 +182,18 @@
     }
 
     .avatar-upload input {
-      display: none;
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      opacity: 0;
+      cursor: pointer;
+      z-index: 10;
+    }
+    
+    .avatar-upload i {
+      pointer-events: none;
     }
 
     .user-info {
@@ -743,6 +755,15 @@ $('#passwordForm').on('submit', async function(e) {
     $btn.text(origText);
   }
 });
+
+    // Handle avatar upload button click - ensure file picker opens
+    $('.avatar-upload').on('click', function(e) {
+        // If the click didn't come from the input itself, trigger it
+        if (e.target.tagName !== 'INPUT') {
+            e.preventDefault();
+            $('#avatarInput').trigger('click');
+        }
+    });
 
     // Handle avatar upload separately
     $('#avatarInput').on('change', async function(e) {

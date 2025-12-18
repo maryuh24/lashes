@@ -390,405 +390,203 @@
 </style>
 </head>
 <body>
-  <nav>
-    <div class="nav-container">
-      <a href="dashboard.html" class="logo">Lash Appointment Booking</a>
-      <ul class="nav-menu">
-        <li><a href="dashboard.html">← Back to Dashboard</a></li>
-      </ul>
-    </div>
-  </nav>
+<nav>
+  <div class="nav-container">
+    <a href="dashboard.html" class="logo">Lash Appointment Booking</a>
+    <ul class="nav-menu">
+      <li><a href="dashboard.html">← Back to Dashboard</a></li>
+    </ul>
+  </div>
+</nav>
 
-  <main>
-    <div class="profile-container">
-      <h2>My Profile</h2>
-      
-      <div id="message" class="message"></div>
-      
-      <div class="profile-header">
-        <div class="avatar-container">
+<main>
+<div class="profile-container">
+<h2>My Profile</h2>
+
+<div id="message" class="message"></div>
+
+<div class="profile-header">
+  <div class="avatar-container">
     <img id="avatarImage" class="avatar" src="" alt="Profile Avatar">
-    <label class="avatar-upload" title="Change profile photo">
-        <i>📷</i>
-        <input type="file" id="avatarInput" accept="image/*">
+    <label class="avatar-upload">
+      📷
+      <input type="file" id="avatarInput" accept="image/*">
     </label>
+  </div>
+  <div class="user-info">
+    <h3 id="userName" class="user-name">Loading...</h3>
+    <p id="userUsername" class="user-username">@username</p>
+  </div>
 </div>
-        <div class="user-info">
-          <h3 id="userName" class="user-name">Loading...</h3>
-          <p id="userUsername" class="user-username">@username</p>
-        </div>
-      </div>
 
-      <div class="profile-section">
-        <h3 class="section-title">Personal Information</h3>
-        <form id="profileForm">
-          <div class="form-group">
-            <label for="firstname">First Name:</label>
-            <input type="text" id="firstname" name="firstname" required>
-          </div>
-          
-          <div class="form-group">
-            <label for="lastname">Last Name:</label>
-            <input type="text" id="lastname" name="lastname" required>
-          </div>
-          
-          <div class="form-group">
-            <label for="username">Username:</label>
-            <input type="text" id="username" name="username" required>
-          </div>
-          
-          <div class="form-group">
-            <label for="email">Email:</label>
-            <input type="email" id="email" name="email" disabled required>
-            <small style="color: var(--text-secondary); font-size: 0.85rem; margin-top: 0.25rem; display: block;">Email cannot be changed</small>
-          </div>
-          
-          <div class="btn-group">
-            <button type="submit">Update Profile</button>
-          </div>
-        </form>
-      </div>
+<div class="profile-section">
+<h3 class="section-title">Personal Information</h3>
+<form id="profileForm">
+  <div class="form-group">
+    <label>First Name</label>
+    <input type="text" id="firstname" required>
+  </div>
 
-      <div class="profile-section">
-        <h3 class="section-title">Change Password</h3>
-        <form id="passwordForm">
-          <div class="form-group">
-            <label for="currentPassword">Current Password:</label>
-            <input type="password" id="currentPassword" name="current_password" required>
-          </div>
-          
-          <div class="form-group">
-            <label for="newPassword">New Password:</label>
-            <input type="password" id="newPassword" name="new_password" required minlength="6">
-          </div>
-          
-          <div class="form-group">
-            <label for="confirmPassword">Confirm New Password:</label>
-            <input type="password" id="confirmPassword" name="confirm_password" required minlength="6">
-          </div>
-          
-          <div class="btn-group">
-            <button type="submit">Change Password</button>
-          </div>
-        </form>
-      </div>
-    </div>
-  </main>
+  <div class="form-group">
+    <label>Last Name</label>
+    <input type="text" id="lastname" required>
+  </div>
 
-  <footer>
-    <p>&copy; 2025 Nails Booking. All rights reserved.</p>
-  </footer>
+  <div class="form-group">
+    <label>Username</label>
+    <input type="text" id="username" required>
+  </div>
 
-  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
-  <script src="js/config.js"></script>
-  <script>
-    // Set default avatar immediately after config loads
-    document.getElementById('avatarImage').src = getImageUrl('uploads/profile.png');
-    
-    // Get user data from localStorage or API
-let authToken;
+  <div class="form-group">
+    <label>Email</label>
+    <input type="email" id="email" disabled>
+  </div>
 
-$(document).ready(async function() {
-  authToken = localStorage.getItem('authToken');
+  <div class="btn-group">
+    <button type="submit">Update Profile</button>
+  </div>
+</form>
+</div>
 
-        if (!authToken) {
-            showMessage('Please log in to view your profile', 'error');
-            setTimeout(() => window.location.href = 'login.html', 2000);
-            return;
-        }
+<div class="profile-section">
+<h3 class="section-title">Change Password</h3>
+<form id="passwordForm">
+  <div class="form-group">
+    <label>Current Password</label>
+    <input type="password" id="currentPassword" required>
+  </div>
 
-        // Try to get user data from localStorage first
-        const storedUserData = localStorage.getItem('userData');
-        if (storedUserData && storedUserData !== 'null' && storedUserData !== 'undefined') {
-            try {
-                userData = JSON.parse(storedUserData);
-                populateProfileForm(userData);
-            } catch (error) {
-                console.error('Error parsing stored user data:', error);
-                localStorage.removeItem('userData'); // Remove corrupted data
-            }
-        }
+  <div class="form-group">
+    <label>New Password</label>
+    <input type="password" id="newPassword" required>
+  </div>
 
-        // Fetch fresh data from API
-        try {
-            const response = await axios.get(API.PROFILE, {
-                headers: {
-                    'Authorization': `Bearer ${authToken}`
-                }
-            });
+  <div class="form-group">
+    <label>Confirm Password</label>
+    <input type="password" id="confirmPassword" required>
+  </div>
 
-            if (response.status === 200) {
-                userData = response.data;
-                localStorage.setItem('userData', JSON.stringify(userData));
-                populateProfileForm(userData);
-            } else {
-                throw new Error('Failed to fetch profile data');
-            }
-        } catch (error) {
-            console.error('Error fetching profile:', error);
-            if (error.response && error.response.status === 401) {
-                localStorage.removeItem('authToken');
-                localStorage.removeItem('userData');
-                window.location.href = 'login.html';
-                return;
-            }
-            if (!userData) {
-                showMessage('Error loading profile data', 'error');
-            }
-        }
-    });
+  <div class="btn-group">
+    <button type="submit">Change Password</button>
+  </div>
+</form>
+</div>
 
-// Populate form with user data
-function populateProfileForm(data) {
-    const fullName = `${data.firstname || ''} ${data.lastname || ''}`.trim() || data.name || 'User';
-    $('#userName').text(fullName);
-    $('#userUsername').text(`@${data.username}`);
-    
-    $('#firstname').val(data.firstname || '');
-    $('#lastname').val(data.lastname || '');
-    $('#username').val(data.username || '');
-    $('#email').val(data.email || '');
-    
-// Set default avatar URL
-let avatarUrl = getImageUrl('uploads/profile.png');
+</div>
+</main>
 
-// Prefer server-provided avatar URL if available
-if (data.avatar_url) {
-    avatarUrl = data.avatar_url;
-    } else if (data.avatar_path) {
-    // Fallback if avatar_url missing
-    avatarUrl = getImageUrl(data.avatar_path);
-}
+<footer>
+<p>&copy; 2025 Nails Booking. All rights reserved.</p>
+</footer>
 
-// Update image source
-$('#avatarImage').attr('src', avatarUrl);
-console.log('Avatar URL:', avatarUrl);
-}
-    // Handle profile form submission - TEXT ONLY
-    $('#profileForm').on('submit', async function(e) {
-        e.preventDefault();
-        
-        const $submitButton = $(this).find('button[type="submit"]');
-        const originalText = $submitButton.text();
-        
-        // Show loading state
-        $submitButton.prop('disabled', true);
-        $submitButton.text('Updating...');
-        
-        try {
-            const authToken = localStorage.getItem('authToken');
-            const formData = new FormData();
-            formData.append('firstname', $('#firstname').val());
-            formData.append('lastname', $('#lastname').val());
-            formData.append('username', $('#username').val());
-            // Email is not sent as it cannot be changed
-            
-            console.log('Updating profile (text only)...');
-            
-            const response = await axios.post(API.PROFILE_UPDATE, formData, {
-                headers: {
-                    'Authorization': `Bearer ${authToken}`
-                }
-            });
-            
-            if (response.status === 200) {
-                showMessage('Profile updated successfully!', 'success');
-                // Update local storage with new data
-                if (userData) {
-                    userData.firstname = $('#firstname').val();
-                    userData.lastname = $('#lastname').val();
-                    userData.username = $('#username').val();
-                    userData.name = `${userData.firstname} ${userData.lastname}`.trim();
-                    localStorage.setItem('userData', JSON.stringify(userData));
-                }
-                // Update displayed name
-                const fullName = `${$('#firstname').val()} ${$('#lastname').val()}`.trim();
-                $('#userName').text(fullName);
-                $('#userUsername').text(`@${$('#username').val()}`);
-            } else {
-                throw new Error(response.data.error || 'Failed to update profile');
-            }
-        } catch (error) {
-            console.error('Error updating profile:', error);
-            if (error.response && error.response.status === 401) {
-                localStorage.removeItem('authToken');
-                window.location.href = 'login.html';
-                return;
-            }
-            const errorMessage = error.response && error.response.data && error.response.data.error 
-                ? error.response.data.error 
-                : error.message;
-            showMessage(errorMessage, 'error');
-        } finally {
-            // Reset button state
-            $submitButton.prop('disabled', false);
-            $submitButton.text(originalText);
-        }
-    });
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script src="js/config.js"></script>
 
-// Handle password form submission
-$('#passwordForm').on('submit', async function(e) {
-  e.preventDefault();
+<script>
+/* ===================== GLOBAL ===================== */
+let userData = null;
+const defaultAvatar = getImageUrl('uploads/profile.png');
+$('#avatarImage').attr('src', defaultAvatar);
 
-  const currentPassword = $('#currentPassword').val().trim();
-  const newPassword = $('#newPassword').val().trim();
-  const confirmPassword = $('#confirmPassword').val().trim();
-
-  // Basic validation
-  if (!currentPassword || !newPassword || !confirmPassword) {
-    showMessage('Please fill in all password fields.', 'error');
-    return;
-  }
-
-  if (newPassword !== confirmPassword) {
-    showMessage('New passwords do not match.', 'error');
-    return;
-  }
-
-  if (newPassword.length < 6) {
-    showMessage('Password must be at least 6 characters.', 'error');
-    return;
-  }
-
-  const $btn = $(this).find('button[type="submit"]');
-  const origText = $btn.text();
-  $btn.prop('disabled', true);
-  $btn.text('Updating...');
-
+/* ===================== LOAD PROFILE ===================== */
+$(document).ready(async function () {
   const authToken = localStorage.getItem('authToken');
-  if (!authToken) {
-    showMessage('Session expired. Please login again.', 'error');
-    window.location.href = 'login.html';
-    return;
+  if (!authToken) return location.href = 'login.html';
+
+  const cached = localStorage.getItem('userData');
+  if (cached) {
+    userData = JSON.parse(cached);
+    populateProfile(userData);
   }
 
   try {
-    const response = await axios.post(API.CHANGE_PASSWORD, {
-      current_password: currentPassword,
-      new_password: newPassword,
-      confirm_password: confirmPassword,
-    }, {
-      headers: {
-        'Authorization': `Bearer ${authToken}`,
-        'Content-Type': 'application/json',
-        'Accept': 'application/json',
-      }
+    const res = await axios.get(API.PROFILE, {
+      headers: { Authorization: `Bearer ${authToken}` }
     });
-
-    console.log('Response status:', response.status);
-    console.log('Password change result:', response.data);
-
-    if (response.status === 200) {
-      showMessage('Password updated successfully!', 'success');
-      $('#passwordForm')[0].reset(); // safer than using `this.reset()` in async
-    } else {
-      let errMsg = 'Failed to update password. Please try again.';
-      if (response.data.error) {
-        if (typeof response.data.error === 'string') {
-          errMsg = response.data.error;
-        } else if (typeof response.data.error === 'object') {
-          const firstError = Object.values(response.data.error)[0];
-          errMsg = Array.isArray(firstError) ? firstError[0] : firstError;
-        }
-      }
-      showMessage(errMsg, 'error');
-    }
-  } catch (error) {
-    console.error('Error changing password:', error);
-    if (error.response && error.response.status === 401) {
-      localStorage.removeItem('authToken');
-      window.location.href = 'login.html';
-      return;
-    }
-    let errMsg = 'Network error. Please check your connection.';
-    if (error.response && error.response.data && error.response.data.error) {
-      if (typeof error.response.data.error === 'string') {
-        errMsg = error.response.data.error;
-      } else if (typeof error.response.data.error === 'object') {
-        const firstError = Object.values(error.response.data.error)[0];
-        errMsg = Array.isArray(firstError) ? firstError[0] : firstError;
-      }
-    }
-    showMessage(errMsg, 'error');
-  } finally {
-    $btn.prop('disabled', false);
-    $btn.text(origText);
+    userData = res.data;
+    localStorage.setItem('userData', JSON.stringify(userData));
+    populateProfile(userData);
+  } catch {
+    localStorage.clear();
+    location.href = 'login.html';
   }
 });
 
-    // Handle avatar upload separately
-    $('#avatarInput').on('change', async function(e) {
-        const file = e.target.files[0];
-        if (!file) return;
-        
-        // Check file type
-        if (!file.type.startsWith('image/')) {
-            showMessage('Please select an image file', 'error');
-            return;
-        }
-        
-        // Check file size (max 5MB)
-        if (file.size > 5 * 1024 * 1024) {
-            showMessage('Image must be less than 5MB', 'error');
-            return;
-        }
-        
-        const formData = new FormData();
-        formData.append('avatar', file);
-        
-        try {
-            const authToken = localStorage.getItem('authToken');
-            console.log('Uploading avatar...');
-            
-            const response = await axios.post(API.PROFILE_AVATAR, formData, {
-                headers: {
-                    'Authorization': `Bearer ${authToken}`
-                }
-            });
-            
-            if (response.status === 200) {
-                showMessage('Profile picture updated successfully!', 'success');
-                // Update avatar image with the server path
-                const avatarUrl = getImageUrl(response.data.avatar_path);
-                $('#avatarImage').attr('src', avatarUrl);
-                console.log('Avatar updated to:', avatarUrl);
-                // Update user data in localStorage
-                if (userData) {
-                    userData.avatar_path = response.data.avatar_path;
-                    localStorage.setItem('userData', JSON.stringify(userData));
-                }
-            } else {
-                throw new Error(response.data.error || 'Failed to update profile picture');
-            }
-        } catch (error) {
-            console.error('Error updating avatar:', error);
-            if (error.response && error.response.status === 401) {
-                localStorage.removeItem('authToken');
-                window.location.href = 'login.html';
-                return;
-            }
-            const errorMessage = error.response && error.response.data && error.response.data.error 
-                ? error.response.data.error 
-                : error.message;
-            showMessage(errorMessage, 'error');
-        }
-    });
+/* ===================== POPULATE ===================== */
+function populateProfile(data) {
+  $('#userName').text(`${data.firstname} ${data.lastname}`);
+  $('#userUsername').text(`@${data.username}`);
+  $('#firstname').val(data.firstname);
+  $('#lastname').val(data.lastname);
+  $('#username').val(data.username);
+  $('#email').val(data.email);
 
-    // Show message function
-    function showMessage(message, type) {
-        const $messageEl = $('#message');
-        $messageEl.text(message);
-        $messageEl.removeClass('message success error').addClass(`message ${type}`);
-        $messageEl.show();
-        
-        // Auto-hide success messages after 3 seconds
-        if (type === 'success') {
-            setTimeout(() => {
-                $messageEl.hide();
-            }, 3000);
-        }
-    }
+  // ✅ USE FULL URL DIRECTLY
+  $('#avatarImage').attr('src', data.avatar_path || defaultAvatar);
+}
+
+/* ===================== UPDATE PROFILE ===================== */
+$('#profileForm').submit(async e => {
+  e.preventDefault();
+  const authToken = localStorage.getItem('authToken');
+
+  const formData = new FormData();
+  formData.append('firstname', $('#firstname').val());
+  formData.append('lastname', $('#lastname').val());
+  formData.append('username', $('#username').val());
+
+  const res = await axios.post(API.PROFILE_UPDATE, formData, {
+    headers: { Authorization: `Bearer ${authToken}` }
+  });
+
+  userData = { ...userData, ...res.data };
+  localStorage.setItem('userData', JSON.stringify(userData));
+  populateProfile(userData);
+  showMessage('Profile updated successfully!', 'success');
+});
+
+/* ===================== AVATAR UPLOAD ===================== */
+$('#avatarInput').change(async function () {
+  const file = this.files[0];
+  if (!file) return;
+
+  const fd = new FormData();
+  fd.append('avatar', file);
+
+  const authToken = localStorage.getItem('authToken');
+  const res = await axios.post(API.PROFILE_AVATAR, fd, {
+    headers: { Authorization: `Bearer ${authToken}` }
+  });
+
+  $('#avatarImage').attr('src', res.data.avatar_path);
+  userData.avatar_path = res.data.avatar_path;
+  localStorage.setItem('userData', JSON.stringify(userData));
+  showMessage('Profile picture updated!', 'success');
+});
+
+/* ===================== PASSWORD ===================== */
+$('#passwordForm').submit(async e => {
+  e.preventDefault();
+  const authToken = localStorage.getItem('authToken');
+
+  await axios.post(API.CHANGE_PASSWORD, {
+    current_password: $('#currentPassword').val(),
+    new_password: $('#newPassword').val(),
+    confirm_password: $('#confirmPassword').val()
+  }, {
+    headers: { Authorization: `Bearer ${authToken}` }
+  });
+
+  showMessage('Password updated successfully!', 'success');
+  e.target.reset();
+});
+
+/* ===================== MESSAGE ===================== */
+function showMessage(msg, type) {
+  $('#message').removeClass().addClass(`message ${type}`).text(msg).show();
+  if (type === 'success') setTimeout(() => $('#message').hide(), 3000);
+}
 </script>
 </body>
 </html>

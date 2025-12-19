@@ -359,7 +359,7 @@
       }
 
       table {
-        min-width: 650px;
+        min-width: 750px;
       }
     }
 
@@ -568,6 +568,7 @@
             <th>ID</th>
             <th>Client Name</th>
             <th>Lash Service</th>
+            <th>Technician</th>
             <th>Date</th>
             <th>Time</th>
             <th>Status</th>
@@ -613,7 +614,8 @@
         $tbody.empty();
 
         if (res.data.length === 0) {
-          $tbody.html(`<tr><td colspan="7" style="text-align: center; padding: 2rem; color: var(--text-secondary);">No appointments found</td></tr>`);
+          const colspan = role === 'admin' ? '8' : (role === 'technician' ? '7' : '7');
+          $tbody.html(`<tr><td colspan="${colspan}" style="text-align: center; padding: 2rem; color: var(--text-secondary);">No appointments found</td></tr>`);
           return;
         }
 
@@ -633,6 +635,7 @@
               <td>${a.id}</td>
               <td>${a.customer ? (a.customer.firstname + ' ' + a.customer.lastname) : "-"}</td>
               <td>${a.service_name || "-"}</td>
+              <td>${a.technician ? a.technician.name : "-"}</td>
               <td>${formatDate(a.date)}</td>
               <td>${formatTime(a.time)}</td>
               <td>${formatStatus(a.status)}</td>
